@@ -14,43 +14,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     const gate = document.getElementById('password-gate');
     if (gate) {
-        document.getElementById('gate-btn').addEventListener('click', () => {
-            const pwd = document.getElementById('gate-pwd').value;
-            if (pwd === "0710") { // <--- 在这里把 0618 改成你想要的密码
+        const gateBtn = document.getElementById('gate-btn');
+        const gatePwd = document.getElementById('gate-pwd');
+        
+        const unlockAction = () => {
+            const pwd = gatePwd.value;
+            if (pwd === "0710") { // <--- 密码
                 gate.style.opacity = '0';
-                setTimeout(() => { gate.style.display = 'none'; }, 500); // 密码正确，门淡出消失
+                setTimeout(() => { gate.style.display = 'none'; }, 500); 
             } else {
-                document.getElementById('gate-error').style.opacity = '1'; // 密码错误，显示提示
+                document.getElementById('gate-error').style.opacity = '1'; 
             }
+        };
+
+        gateBtn.addEventListener('click', unlockAction);
+        // 🌟 新增：支持按下键盘 Enter 键直接解锁
+        gatePwd.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') unlockAction();
         });
     }
 
     const devMode = false; // 上线前改成 false 才能看到信封开场！
 
     // ==========================================
-    // 🚀 终极性能优化：智能视频/性能管家
-    // ==========================================
-    const lazyVideoObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // 滑入屏幕，开始播放
-                entry.target.play().catch(() => {});
-            } else {
-                // ⚠️ 滑出屏幕，立刻暂停！释放手机 CPU 性能！
-                entry.target.pause();
-            }
-        });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('video').forEach(video => {
-        lazyVideoObserver.observe(video);
-    });
-
-    // ==========================================
-    // 🚀 终极性能优化引擎 (防卡顿)
+    // 🚀 终极性能优化引擎 (智能媒体管家 - 修复整合版)
     // ==========================================
     
-    // 1. 图片智能懒加载（滑动到附近才加载图片，极大降低初始卡顿）
+    // 1. 图片智能懒加载（滑动到附近才加载图片，极大降低初始卡顿和流量消耗）
     document.querySelectorAll('img:not(.slide)').forEach(img => {
         img.setAttribute('loading', 'lazy');
     });
@@ -62,14 +52,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 视频进入屏幕，开始播放
                 entry.target.play().catch(() => {});
             } else {
-                // 视频离开屏幕，立刻暂停，释放 CPU 性能
+                // 视频离开屏幕，立刻暂停，释放手机 CPU 性能！
                 entry.target.pause();
             }
         });
     }, { threshold: 0.1 }); // 露出10%就开始触发
 
-    document.querySelectorAll('.photo-placeholder video').forEach(video => {
-        video.removeAttribute('autoplay'); // 剥夺原本的无脑自动播放
+    // 剥夺原本的无脑自动播放，全部交由管家智能控制
+    document.querySelectorAll('video').forEach(video => {
+        video.removeAttribute('autoplay'); 
         lazyVideoObserver.observe(video);
     });
 
@@ -369,8 +360,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     setTimeout(() => {
                         const letterBox = document.querySelector('.phase-3-letter');
-                        // 进入信封拉长到 3 秒，让开场更具电影叙事感，绝对平滑
-                        cinematicScrollTo(letterBox, 3000, -40);
+                        // 🎥 智能居中判断：如果信纸比屏幕还高（手机），就对齐顶部 -40 留白；
+                        // 如果信纸比屏幕矮（电脑大屏），就绝对居中，保证最美电影画幅！
+                        const perfectOffset = letterBox.offsetHeight > window.innerHeight 
+                                              ? -40 
+                                              : -(window.innerHeight / 2) + (letterBox.offsetHeight / 2);
+                        cinematicScrollTo(letterBox, 3000, perfectOffset);
                     }, 4500);
                 }
                 
@@ -387,8 +382,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 
                                 // 🎥 镜头魔法 (段落运镜)：只有当打到 "......" 的时候，才往下滑！
                                 if (line.textContent.trim() === '......') {
-                                    // 耗时 2.5 秒，极其轻柔地推上去，不知不觉就挪好了位置
-                                    cinematicScrollTo(line, 2500, -120);
+                                    // 智能计算：把这行省略号精准放在屏幕正中间，绝对不会切断上面的文字
+                                    const centerLineOffset = -(window.innerHeight / 2) + (line.offsetHeight / 2);
+                                    cinematicScrollTo(line, 2500, centerLineOffset);
                                 }
                                 
                             }, index * typeSpeed); 
