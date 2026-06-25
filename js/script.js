@@ -321,11 +321,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     const slideshow = entry.target.querySelector('#ending-slideshow');
                     
-                    // 🎥 镜头魔法 0：【绝对居中吸附】
-                    // 精准计算偏移量：-(屏幕高度一半) + (相框高度一半)
-                    // 这能确保无论在什么尺寸的屏幕上，相框的中心点永远死死钉在屏幕正中心！
-                    const centerOffset = -(window.innerHeight / 2) + (slideshow.offsetHeight / 2);
-                    cinematicScrollTo(slideshow, 1000, centerOffset);
+                    // 🎥 【核心修复 1：大道至简的居中】
+                    // 不再去算相框尺寸了！直接让 100vh 的背景大框(entry.target)对齐屏幕顶部(offset: 0)。
+                    // 因为背景框自带 flex 居中，照片绝对会被完美钉在屏幕正中心！
+                    cinematicScrollTo(entry.target, 1000, 0);
                     
                     const slides = slideshow.querySelectorAll('.slide');
                     let current = 0;
@@ -354,18 +353,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, 3500); 
                 }
                 
-                // 🌟 Phase 2: 短句过渡
+                // 🌟 Phase 2: 短句过渡 (保持不变，省略...)
                 if(entry.target.id === 'phase-2' && !entry.target.classList.contains('played')) {
                     entry.target.classList.add('played');
-                    
                     setTimeout(() => {
                         const letterBox = document.querySelector('.phase-3-letter');
-                        // 🎥 智能居中判断：如果信纸比屏幕还高（手机），就对齐顶部 -40 留白；
-                        // 如果信纸比屏幕矮（电脑大屏），就绝对居中，保证最美电影画幅！
-                        const perfectOffset = letterBox.offsetHeight > window.innerHeight 
-                                              ? -40 
-                                              : -(window.innerHeight / 2) + (letterBox.offsetHeight / 2);
-                        cinematicScrollTo(letterBox, 3000, perfectOffset);
+                        // 对齐信纸，留一点点呼吸空间 (-50)
+                        cinematicScrollTo(letterBox, 3000, -50);
                     }, 4500);
                 }
                 
@@ -373,18 +367,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(entry.target.id === 'phase-3' && !entry.target.classList.contains('typed')) {
                     entry.target.classList.add('typed');
                     const lines = entry.target.querySelectorAll('.typing-line');
-                    const typeSpeed = 2800; 
+                    
+                    // 🎥 【核心修复 2：节奏提速】每行间隔从 2800 缩短到 2200 毫秒
+                    // 配合 CSS 的 2.0s，每句话打完会有 0.2 秒的停顿，像人呼吸一样自然，绝对不会觉得干等！
+                    const typeSpeed = 2200; 
                     
                     setTimeout(() => {
                         lines.forEach((line, index) => {
                             setTimeout(() => {
                                 line.classList.add('type-active');
                                 
-                                // 🎥 镜头魔法 (段落运镜)：只有当打到 "......" 的时候，才往下滑！
+                                // 🎥 【核心修复 3：大幅上推防切字】
                                 if (line.textContent.trim() === '......') {
-                                    // 智能计算：把这行省略号精准放在屏幕正中间，绝对不会切断上面的文字
-                                    const centerLineOffset = -(window.innerHeight / 2) + (line.offsetHeight / 2);
-                                    cinematicScrollTo(line, 2500, centerLineOffset);
+                                    // 不要对齐中间了！直接向上推，让 ...... 停留在距离屏幕顶部只有 150px 的位置！
+                                    // 这样下方会腾出极大的空白，后面的 5 行字绝对能够完美显示。
+                                    cinematicScrollTo(line, 2500, -150);
                                 }
                                 
                             }, index * typeSpeed); 
@@ -393,34 +390,25 @@ document.addEventListener('DOMContentLoaded', () => {
                         const totalTime = lines.length * typeSpeed;
                         
                         setTimeout(() => {
-                            // 信打完后停留 2 秒，然后耗时 4 秒慢慢滑向生日祝福
                             cinematicScrollTo(document.getElementById('phase-4'), 4000, 0);
                         }, totalTime + 2000); 
 
                     }, 2800); 
                 }
                 
-                // 🌟 Phase 4: 结局落幕与黑屏
+                // 🌟 Phase 4: 结局落幕与黑屏 (保持不变)
                 if(entry.target.id === 'phase-4' && !entry.target.classList.contains('triggered')) {
                     entry.target.classList.add('triggered');
-                    
                     setTimeout(() => {
                         const blackout = document.getElementById('blackout-screen');
                         blackout.classList.add('active');
-                        
                         setTimeout(() => {
                             let vol = bgMusic.volume;
                             const fadeAudio = setInterval(() => {
-                                if (vol > 0.05) {
-                                    vol -= 0.05;
-                                    bgMusic.volume = vol;
-                                } else {
-                                    clearInterval(fadeAudio);
-                                    bgMusic.pause();
-                                }
+                                if (vol > 0.05) { vol -= 0.05; bgMusic.volume = vol; } 
+                                else { clearInterval(fadeAudio); bgMusic.pause(); }
                             }, 250); 
                         }, 2000); 
-                        
                     }, 4500); 
                 }
             }
