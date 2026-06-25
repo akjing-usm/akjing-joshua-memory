@@ -13,6 +13,13 @@
 </head>
 <body class="theme-morning scroll-locked">
 
+    <div id="password-gate" style="position:fixed; top:0; left:0; width:100%; height:100%; background: #F6FBFF; z-index:999999; display:flex; flex-direction:column; justify-content:center; align-items:center; transition: 0.5s;">
+        <h2 class="handwriting" style="font-size: 32px; color: #2C3E50; margin-bottom: 20px;">一封加密的信件</h2>
+        <input type="password" id="gate-pwd" placeholder="请输入密码" style="padding: 12px; font-size: 18px; text-align: center; border: 2px dashed #8CB9F2; border-radius: 8px; outline: none; margin-bottom: 20px; background: transparent;">
+        <button id="gate-btn" style="padding: 10px 30px; background: #8CB9F2; color: white; border: none; border-radius: 20px; font-size: 18px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">解锁</button>
+        <p id="gate-error" class="handwriting" style="color: #ff4d4f; font-size: 20px; margin-top: 15px; opacity: 0; transition: 0.3s;">密码不对哦，再想想？</p>
+    </div>
+
     <button id="musicBtn" class="music-btn" title="播放音乐">🎵</button>
     <audio id="bgMusic" loop>
         <source src="music/bgm.mp3" type="audio/mpeg">

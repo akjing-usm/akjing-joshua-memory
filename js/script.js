@@ -10,20 +10,20 @@ window.scrollTo(0, 0);
 document.addEventListener('DOMContentLoaded', () => {
 
     // ==========================================
-    // 🔒 专属密码锁 (测试阶段使用)
+    // 🔒 专属密码锁逻辑
     // ==========================================
-    const correctPassword = "0710"; // 这里改成你们的专属密码，比如她的生日或外号
-    let userPassword = prompt("【回忆门卫】请输入专属密码解锁网页：");
-
-    while (userPassword !== correctPassword) {
-        if (userPassword === null) {
-            // 如果点“取消”，直接把整个网页清空变白，防止偷看
-            document.body.innerHTML = "<h1 style='text-align:center; margin-top:20vh; color:#2C3E50; font-family: sans-serif;'>这里藏着专属回忆，非请勿入哦✨</h1>";
-            throw new Error("访问被拒绝"); // 强制停止运行后面的相册代码
-        }
-        userPassword = prompt("密码不对哦，再想想？");
+    const gate = document.getElementById('password-gate');
+    if (gate) {
+        document.getElementById('gate-btn').addEventListener('click', () => {
+            const pwd = document.getElementById('gate-pwd').value;
+            if (pwd === "0618") { // <--- 在这里把 0618 改成你想要的密码
+                gate.style.opacity = '0';
+                setTimeout(() => { gate.style.display = 'none'; }, 500); // 密码正确，门淡出消失
+            } else {
+                document.getElementById('gate-error').style.opacity = '1'; // 密码错误，显示提示
+            }
+        });
     }
-    // 如果密码输入正确，下面的相册代码才会继续运行！
 
     const devMode = false; // 上线前改成 false 才能看到信封开场！
 
