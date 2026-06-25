@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (gate) {
         document.getElementById('gate-btn').addEventListener('click', () => {
             const pwd = document.getElementById('gate-pwd').value;
-            if (pwd === "0618") { // <--- 在这里把 0618 改成你想要的密码
+            if (pwd === "0710") { // <--- 在这里把 0618 改成你想要的密码
                 gate.style.opacity = '0';
                 setTimeout(() => { gate.style.display = 'none'; }, 500); // 密码正确，门淡出消失
             } else {
