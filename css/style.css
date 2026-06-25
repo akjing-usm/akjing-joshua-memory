@@ -1,0 +1,570 @@
+/*
+==================================================
+Project : 《拾光》 V6.5 Ultimate Aesthetic Flow
+==================================================
+*/
+
+/* --- VARIABLES & PALETTE --- */
+:root {
+    --bg-morning: #EAF6FF;   
+    --bg-afternoon: #FFF9E6; 
+    --bg-dusk: #FFF3E0;      
+    --bg-night: #16223F;     
+    
+    --paper: #FFFDF7;
+    --tape: #F8E7A2;
+    --shadow-soft: rgba(0, 0, 0, 0.08);
+    --shadow-deep: rgba(0, 0, 0, 0.15);
+    --accent: #8CB9F2;
+    --text-main: #4A4A4A;
+    --text-ink: #2C3E50;
+    
+    --font-std: 'Noto Sans SC', sans-serif;
+    --font-serif: 'Noto Serif SC', serif; 
+    --font-hand: 'Ma Shan Zheng', cursive; 
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* 修复双滚动条卡顿 */
+html { 
+    scroll-behavior: smooth; 
+}
+
+/* THEME TRANSITION ENGINE */
+body {
+    font-family: var(--font-std);
+    color: var(--text-main);
+    background-color: var(--bg-morning);
+    transition: background-color 2.5s ease-in-out; 
+    overflow-x: hidden; 
+    max-width: 100%;
+}
+
+/* 彻底锁死首屏高度 */
+body.scroll-locked { 
+    overflow: hidden !important; 
+    height: 100vh; 
+    width: 100vw;
+}
+
+body.theme-morning { background-color: var(--bg-morning); }
+body.theme-afternoon { background-color: var(--bg-afternoon); } 
+body.theme-dusk { background-color: var(--bg-dusk); }
+body.theme-night { background-color: var(--bg-night); }
+
+/* --- TYPOGRAPHY --- */
+.handwriting { font-family: var(--font-hand); font-weight: 400; letter-spacing: 2px; }
+.paper-texture {
+    background-color: var(--paper);
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+    box-shadow: 0 4px 15px var(--shadow-soft);
+}
+
+/* --- UI CONTROLS --- */
+.music-btn {
+    position: fixed; top: 30px; right: 30px; width: 45px; height: 45px;
+    background: var(--paper); border: none; border-radius: 50%;
+    box-shadow: 0 4px 12px var(--shadow-deep); z-index: 1000;
+    cursor: pointer; transition: 0.3s;
+}
+.music-btn:hover { transform: scale(1.1); }
+.music-btn.playing { animation: spinRecord 15s linear infinite; }
+@keyframes spinRecord {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* --- 0. ENVELOPE SCENE --- */
+.envelope-screen {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background-color: var(--bg-morning); display: flex; justify-content: center; align-items: center;
+    z-index: 9999; transition: opacity 1.5s ease, visibility 1.5s;
+}
+.envelope-screen.opened { opacity: 0; visibility: hidden; pointer-events: none; }
+.envelope-container {
+    text-align: center; cursor: pointer; padding: 40px 60px;
+    background: var(--paper); border: 2px dashed var(--accent); border-radius: 4px;
+    box-shadow: 0 10px 25px var(--shadow-soft); animation: float 3s infinite ease-in-out;
+}
+.envelope-icon { font-size: 60px; margin-bottom: 10px; }
+.envelope-title { font-size: 32px; color: var(--text-ink); margin-bottom: 5px; }
+
+.envelope-hint { 
+    display: inline-block; margin-top: 15px; padding: 8px 24px;
+    background-color: var(--accent); color: #FFF; border-radius: 20px;
+    font-size: 15px; font-weight: 500; box-shadow: 0 4px 10px rgba(140, 185, 242, 0.4);
+    animation: pulseHint 2s infinite ease-in-out; 
+}
+
+/* --- 1. HERO SCENE & CLOUDS --- */
+.hero {
+    height: 100vh; display: flex; justify-content: center; align-items: center;
+    text-align: center; position: relative; z-index: 10;
+    background: linear-gradient(180deg, #A1C4FD 0%, #C2E9FB 50%, #EAF6FF 100%);
+    transition: opacity 2.5s ease; 
+}
+.hero.fade-out { opacity: 0; pointer-events: none; }
+
+.clouds-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; z-index: 1; }
+.cloud { position: absolute; color: #FFF; opacity: 0.08; animation: floatCloud linear infinite; user-select: none; }
+.cloud-1 { top: 15%; left: -20%; font-size: 80px; animation-duration: 140s; }
+.cloud-2 { top: 40%; left: -20%; font-size: 120px; animation-duration: 180s; animation-delay: -30s; opacity: 0.03; }
+.cloud-3 { top: 70%; left: -20%; font-size: 60px; animation-duration: 100s; animation-delay: -60s; }
+.cloud-4 { top: 25%; left: -20%; font-size: 100px; animation-duration: 160s; animation-delay: -90s; opacity: 0.02; }
+
+.intro-text-container { padding: 20px; z-index: 2; }
+.fade-line { font-family: var(--font-serif); font-size: 22px; font-weight: 600; letter-spacing: 3px; line-height: 2.5; color: #2C3E50; text-shadow: 0px 1px 3px rgba(255, 255, 255, 0.6); opacity: 0; }
+.start-story .fade-line { animation: smoothIn 3s forwards; }
+.start-story .fade-line:nth-child(1) { animation-delay: 0.5s; }
+.start-story .fade-line:nth-child(2) { animation-delay: 4.0s; }
+.start-story .fade-line:nth-child(3) { animation-delay: 7.5s; }
+.start-story .fade-line:nth-child(4) { animation-delay: 11.0s; }
+.start-story .open-book-btn { animation-delay: 14.5s; }
+
+.open-book-btn {
+    margin-top: 40px; padding: 12px 35px; font-family: var(--font-std);
+    background: var(--paper); color: var(--accent); border: 1px solid var(--accent);
+    border-radius: 30px; cursor: pointer; box-shadow: 0 5px 15px var(--shadow-soft);
+    opacity: 0; transition: all 0.3s ease; text-shadow: none; 
+}
+.open-book-btn:hover { background: var(--accent); color: white; text-shadow: none; -webkit-font-smoothing: antialiased; }
+
+/* --- SCRAPBOOK LAYOUT --- */
+.scrapbook-container { 
+    width: 100%; max-width: 1200px; margin: 0 auto; 
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 1.5s cubic-bezier(0.25, 1, 0.5, 1), transform 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.scrapbook-container.show { opacity: 1; transform: translateY(0); }
+
+.chapter-cover { min-height: 60vh; display: flex; justify-content: center; align-items: center; padding: 60px 20px; }
+.chapter-title-wrapper { position: relative; padding: 40px 80px; text-align: center; transform: rotate(-1deg); transition: box-shadow 0.3s ease; }
+.chapter-num { font-size: 14px; color: var(--accent); letter-spacing: 4px; text-transform: uppercase; }
+.chapter-name { font-size: 50px; color: var(--text-ink); margin: 10px 0; }
+
+/* SCRAPBOOK DECORATIONS EXTENDED */
+.tape { position: absolute; width: 100px; height: 30px; background-color: var(--tape); opacity: 0.85; z-index: 5; box-shadow: 0 1px 2px var(--shadow-soft); }
+.tape-top-center { top: -15px; left: 50%; transform: translateX(-50%) rotate(-3deg); }
+.tape-top-left { top: -10px; left: -20px; transform: rotate(-45deg); width: 80px; }
+.tape-top-right { top: -10px; right: -20px; transform: rotate(45deg); width: 80px; }
+
+.paper-clip { position: absolute; top: -15px; left: 20px; font-size: 35px; z-index: 5; transform: rotate(15deg); filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2)); }
+.push-pin { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); font-size: 25px; z-index: 5; filter: drop-shadow(0 5px 5px var(--shadow-deep)); }
+.pressed-flower { position: absolute; bottom: -10px; right: -10px; font-size: 35px; transform: rotate(15deg); z-index: 6; filter: drop-shadow(2px 2px 5px var(--shadow-deep)); }
+.ticket { position: absolute; top: 10px; left: -20px; font-size: 40px; transform: rotate(-20deg); z-index: 6; filter: drop-shadow(2px 4px 6px var(--shadow-deep)); }
+.leaf { position: absolute; top: -15px; right: 15px; font-size: 35px; transform: rotate(45deg); z-index: 6; filter: drop-shadow(2px 4px 6px var(--shadow-deep)); }
+.small-note { position: absolute; bottom: 10px; left: -15px; font-size: 35px; transform: rotate(-10deg); z-index: 6; filter: drop-shadow(2px 4px 6px var(--shadow-deep)); }
+
+.gallery-section { padding: 30px 20px 80px 20px; }
+.scrapbook-wall { 
+    display: flex; justify-content: center; flex-wrap: wrap; 
+    gap: 50px 35px; align-items: center; 
+}
+
+.scrapbook-item {
+    position: relative; background: var(--paper); padding: 15px 15px 40px 15px; 
+    width: 320px; /* 固定卡片宽度，保持阵型整齐 */
+    box-shadow: 2px 5px 15px var(--shadow-soft); cursor: pointer;
+    opacity: 0; transform: translateY(50px) rotate(var(--rot, 0deg));
+    transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.scrapbook-item.visible { opacity: 1; transform: translateY(0) rotate(var(--rot, 0deg)); }
+.scrapbook-item:hover { transform: scale(1.03) rotate(0deg) !important; box-shadow: 0 15px 30px var(--shadow-deep); z-index: 10; }
+
+/* 🌟 照片防裁剪与 V5 固定比例修复 */
+.photo-placeholder { 
+    width: 100%; 
+    background: transparent; 
+    overflow: hidden; 
+    border-radius: 2px; 
+    transform: translateZ(0); 
+    position: relative; /* 👈 必须有这个，标签才能悬浮在照片里面 */
+}
+.photo-placeholder img, .photo-placeholder video { 
+    width: 100%; 
+    object-fit: cover; 
+    display: block; 
+    border-radius: 2px; 
+    pointer-events: none; 
+}
+
+/* 核心修复：强行把普通相纸的高度锁回 280px (V5 尺寸) */
+.scrapbook-item:not(.filmstrip):not(.wide-layout):not(.landscape):not(.portrait) .photo-placeholder {
+    height: 280px; 
+}
+.scrapbook-item:not(.filmstrip):not(.wide-layout):not(.landscape):not(.portrait) .photo-placeholder img,
+.scrapbook-item:not(.filmstrip):not(.wide-layout):not(.landscape):not(.portrait) .photo-placeholder video {
+    height: 100%; 
+}
+
+/* 🌟 单张横屏照片/影片专属排版 */
+.landscape { 
+    width: 450px; /* 横屏卡片会比普通 320px 更宽，更有电影感 */
+}
+.landscape .photo-placeholder { 
+    height: auto; 
+}
+.landscape .photo-placeholder img, 
+.landscape .photo-placeholder video { 
+    height: auto; 
+    aspect-ratio: auto; /* 保持素材默认的原始比例 */
+}
+
+/* 🌟 单张竖屏照片/影片专属排版 */
+.portrait { 
+    width: 320px; /* 保持与普通卡片一样的宽度，显得整齐 */
+}
+.portrait .photo-placeholder { 
+    height: 400px; /* 比 V5 的 280px 高出很多，完美展现竖屏特写 */
+}
+.portrait .photo-placeholder img, 
+.portrait .photo-placeholder video { 
+    height: 100%; 
+    object-fit: cover; /* 多余边缘依然会自动裁剪，保持边缘平整 */
+}
+
+.caption { margin-top: 25px; text-align: center; color: var(--text-ink); font-size: 21px; }
+
+/* Multi-photo layouts */
+.filmstrip { width: 290px; }
+.filmstrip .photo-placeholder { height: auto; background: transparent; display: flex; flex-direction: column; gap: 12px; }
+.filmstrip .photo-placeholder img { height: auto; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 2px; }
+
+.wide-layout { width: clamp(350px, 45vw, 600px); }
+.wide-layout .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; height: auto; }
+.wide-layout .photo-grid img { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 2px; }
+
+/* --- MEMORY VIEWER (Lightbox) --- */
+.memory-viewer {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    display: flex; justify-content: center; align-items: center;
+    z-index: 10000; opacity: 0; pointer-events: none; transition: 0.5s ease;
+}
+.memory-viewer.active { opacity: 1; pointer-events: auto; }
+.viewer-overlay { position: absolute; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); }
+
+/* 长内容上下滑动 */
+.viewer-content {
+    position: relative; width: 90%; max-width: 800px; padding: 20px;
+    border-radius: 4px; z-index: 2; transform: scale(0.9); transition: 0.5s ease;
+    max-height: 90vh; overflow-y: auto; 
+}
+.viewer-content::-webkit-scrollbar { display: none; }
+.viewer-content { -ms-overflow-style: none; scrollbar-width: none; }
+.memory-viewer.active .viewer-content { transform: scale(1); }
+
+/* 关闭按钮钉在右上角 */
+.close-btn { 
+    position: fixed; top: 25px; right: 30px; background: none; border: none; 
+    color: rgba(255, 255, 255, 0.7); font-size: 40px; cursor: pointer; 
+    transition: all 0.3s ease; z-index: 10001; 
+}
+.close-btn:hover { transform: rotate(90deg) scale(1.1); color: #FFF; }
+
+/* 横向滑动多图模式 */
+.viewer-media-container { 
+    width: 100%; max-height: 65vh; display: flex; flex-direction: row; align-items: center;
+    gap: 20px; padding: 10px; overflow-x: auto; overflow-y: hidden;
+}
+.viewer-media-container::-webkit-scrollbar { display: none; }
+.viewer-media-container { -ms-overflow-style: none; scrollbar-width: none; }
+
+.viewer-media-container img, .viewer-media-container video { 
+    max-height: 58vh; width: auto; max-width: 85vw; object-fit: contain; 
+    flex-shrink: 0; margin: auto; border-radius: 4px;
+}
+
+.viewer-details { margin-top: 20px; text-align: center; }
+.viewer-date { display: inline-block; background: var(--tape); padding: 2px 10px; font-size: 14px; margin-bottom: 10px; transform: rotate(-1deg); color: var(--text-ink); font-weight: 500;}
+
+/* Caption & Long Memory */
+.viewer-caption { font-size: 28px; color: #FFF; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+.viewer-memory {
+    font-size: 18px; color: rgba(255, 255, 255, 0.85); margin-top: 15px;
+    line-height: 1.8; text-align: center; max-width: 85%;
+    margin-left: auto; margin-right: auto; letter-spacing: 2px;
+}
+
+/* --- 4-PHASE CINEMATIC ENDING --- */
+.ending-section { display: block; padding: 0; margin: 0; }
+.ending-phase { 
+    min-height: 100vh; width: 100vw; margin-left: calc(-50vw + 50%); 
+    display: flex; flex-direction: column; justify-content: center; align-items: center; 
+    opacity: 0; transform: translateY(30px); transition: opacity 2s ease, transform 2s ease; 
+}
+.ending-phase.visible { opacity: 1; transform: translateY(0); }
+
+/* Phase 1: Photo */
+.final-photo-container { 
+    width: 90%; max-width: 400px; background: var(--paper); padding: 15px 15px 40px 15px; 
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5); transform: rotate(-1deg); 
+}
+.final-photo-container img { width: 100%; height: auto; display: block; border-radius: 2px; }
+
+/* Phase 2: Short Thanks */
+.phase-2-text { font-size: 28px; color: #FFF; letter-spacing: 3px; text-align: center; padding: 0 20px;}
+
+/* Phase 3: Letter Typing */
+.phase-3-letter { 
+    background: var(--paper); padding: 60px 50px; max-width: 600px; width: 90%; 
+    transform: rotate(1deg); box-shadow: 0 10px 30px rgba(0,0,0,0.4); 
+}
+.typing-line { 
+    font-size: 24px; color: var(--text-ink); line-height: 2.2; margin-bottom: 5px;
+    white-space: nowrap; overflow: hidden; max-width: 0; 
+}
+.typing-line.type-active { animation: typeReveal 5.0s cubic-bezier(0.4, 0.0, 0.2, 1) forwards; }
+
+/* Phase 4: Final Text */
+.phase-4-bday { font-size: 36px; color: #FFF; letter-spacing: 4px; text-align: center; }
+
+/* PHASE 4 BLACKOUT SEQUENCE */
+.screen-blackout { 
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+    background: #000; z-index: 99999; opacity: 0; pointer-events: none; 
+    transition: opacity 2.5s ease; display: flex; justify-content: center; align-items: center; 
+}
+.screen-blackout.active { opacity: 1; pointer-events: auto; }
+.final-whisper { 
+    color: #FFF; font-size: 28px; letter-spacing: 3px; text-align: center;
+    opacity: 0; transform: translateY(10px); transition: opacity 3s ease 2s, transform 3s ease 2s; 
+}
+.screen-blackout.active .final-whisper { opacity: 1; transform: translateY(0); }
+
+/* --- TIMELINE NAVIGATION --- */
+.timeline-nav {
+    position: fixed; right: 30px; top: 50%; transform: translateY(-50%);
+    z-index: 900; display: flex; flex-direction: column; align-items: flex-end; gap: 30px;
+    opacity: 0; visibility: hidden; transition: opacity 1s ease, visibility 1s, right 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.timeline-nav.show { opacity: 1; visibility: visible; }
+
+.timeline-line {
+    position: absolute; right: 6.5px; top: 15px; bottom: 15px; width: 1.5px;
+    background: rgba(140, 185, 242, 0.5); z-index: -1;
+}
+
+.timeline-dot { position: relative; text-decoration: none; display: flex; align-items: center; justify-content: flex-end; }
+.timeline-dot::after {
+    content: ''; width: 12px; height: 12px; border-radius: 50%;
+    background: var(--paper); border: 2px solid var(--accent); margin-left: 15px;
+    transition: all 0.3s ease; box-shadow: 0 0 5px var(--shadow-soft);
+}
+.timeline-dot.active::after, .timeline-dot:hover::after { background: var(--accent); transform: scale(1.4); box-shadow: 0 0 10px var(--accent); }
+
+.timeline-dot span {
+    font-family: var(--font-hand); font-size: 20px; color: var(--text-ink);
+    opacity: 0; transform: translateX(10px); transition: all 0.3s ease;
+    background: rgba(255, 253, 247, 0.85); backdrop-filter: blur(4px);
+    padding: 4px 12px; border-radius: 4px; box-shadow: 0 2px 8px var(--shadow-soft);
+    pointer-events: none; white-space: nowrap; letter-spacing: 2px;
+}
+.timeline-dot:hover span, .timeline-dot.active span { opacity: 1; transform: translateX(0); }
+
+/* Mobile Timeline Toggle */
+.timeline-toggle {
+    display: none; position: fixed; right: 20px; bottom: 30px; width: 45px; height: 45px;
+    background: var(--paper); border: none; border-radius: 50%; box-shadow: 0 4px 12px var(--shadow-deep);
+    z-index: 1001; font-size: 20px; cursor: pointer; transition: 0.3s; opacity: 0; visibility: hidden;
+}
+.timeline-toggle.show-btn { opacity: 1; visibility: visible; }
+.timeline-toggle:hover { transform: scale(1.1); }
+
+@media (max-width: 768px) {
+    .timeline-nav {
+        right: -180px; background: rgba(255, 253, 247, 0.95); backdrop-filter: blur(10px);
+        padding: 30px 20px; border-radius: 12px 0 0 12px; box-shadow: -5px 0 20px var(--shadow-deep);
+    }
+    .timeline-nav.mobile-open { right: 0; }
+    .timeline-toggle { display: block; }
+    .timeline-dot span { opacity: 1; transform: translateX(0); background: none; box-shadow: none; padding-right: 5px;}
+    .timeline-line { right: 26.5px; }
+}
+
+/* Animations */
+@keyframes smoothIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes pulseHint { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@keyframes floatCloud { from { transform: translateX(0); } to { transform: translateX(120vw); } }
+@keyframes typeReveal { to { max-width: 100%; } }
+
+/* ==========================================
+   🌟 高级感照片点击提示（半透明悬浮）
+========================================== */
+.elegant-hint {
+    position: absolute;
+    bottom: -10px;           /* 悬浮在照片底部 */
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.85); /* 半透明白色底 */
+    backdrop-filter: blur(4px);            /* 微微的磨砂毛玻璃效果 */
+    padding: 6px 18px;
+    border-radius: 20px;
+    color: var(--text-ink);
+    font-size: 15px;
+    letter-spacing: 2px;
+    white-space: nowrap;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    pointer-events: none;   /* 不影响点击照片 */
+    animation: softPulse 2.5s infinite ease-in-out;
+}
+
+/* 柔和的呼吸浮动动画 */
+@keyframes softPulse {
+    0%, 100% { 
+        opacity: 0.8; 
+        transform: translateX(-50%) translateY(0); 
+    }
+    50% { 
+        opacity: 1; 
+        transform: translateX(-50%) translateY(-3px); 
+        box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+}
+
+/* ==========================================
+   🌟 强制限制放大框内的视频高度
+========================================== */
+.viewer-media-container video {
+    max-height: 57vh !important; /* 👈 加了 !important 强制生效 */
+    height: auto !important;     /* 确保高度按比例自动调整 */
+    width: auto !important;
+    max-width: 85vw !important;
+    object-fit: contain;
+}
+
+/* ==========================================
+   🌟 移动端专属适配：防止结尾信件文字被切断
+========================================== */
+@media (max-width: 768px) {
+    /* 1. 让信纸在手机上占据更多横向空间，并减小左右内边距 */
+    .phase-3-letter { 
+        width: 95%; 
+        padding: 40px 20px; 
+    }
+    
+    /* 2. 缩小打字机文字的大小和字间距，确保一行能塞下15-20个字 */
+    .typing-line { 
+        font-size: 16px; 
+        letter-spacing: 1px; 
+        line-height: 2; 
+        margin-bottom: 8px;
+    }
+
+    /* 3. 顺便把最后那句生日快乐也等比例缩小，防止溢出 */
+    .phase-4-bday { 
+        font-size: 26px; 
+        letter-spacing: 3px; 
+    }
+}
+
+/* ==========================================
+   🌟 Phase 1: 电影级快速闪回轮播
+========================================== */
+#ending-slideshow {
+    position: relative;
+    transition: opacity 2.5s ease; /* 最后的缓慢淡出时间 */
+}
+#ending-slideshow.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+.slide-placeholder {
+    visibility: hidden; /* 透明的占位图，用来让白色相纸维持正确的大小 */
+    width: 100%; height: auto; display: block; 
+}
+#ending-slideshow .slide {
+    position: absolute;
+    top: 15px; left: 15px;
+    width: calc(100% - 30px);
+    height: calc(100% - 55px);
+    
+    /* 👈 1. 核心修改：把原本的 cover 改成 contain，保证完整显示不裁剪 */
+    object-fit: contain; 
+    
+    /* 👈 2. 强烈建议加这行：因为 contain 会在边缘留白，加上黑色背景会像“电影画幅”一样，非常高级！ */
+    background-color: #000; 
+
+    border-radius: 2px;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+#ending-slideshow .slide.active {
+    opacity: 1;
+}
+
+/* ==========================================
+   🚀 性能优化：强制开启 GPU 硬件加速
+========================================== */
+
+/* 让耗费性能的元素交给显卡处理，而不是 CPU */
+.scrapbook-item, 
+.cloud, 
+.dust-particles, 
+.elegant-hint, 
+.timeline-nav {
+    will-change: transform, opacity;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0); /* 触发硬件加速 */
+}
+
+/* 优化投影和毛玻璃在滑动时的卡顿 */
+.decor, 
+.photo-placeholder {
+    transform: translateZ(0);
+}
+
+/* ==========================================
+   🌟 竖屏胶卷专属：放大时强行并排显示3张
+========================================== */
+.viewer-media-container.portrait-film-viewer {
+    justify-content: center; /* 居中显示，不要靠左 */
+}
+.viewer-media-container.portrait-film-viewer img {
+    /* 强行平分宽度，减去中间的gap缝隙，完美挤进同一屏幕 */
+    max-width: calc(33.333% - 15px) !important; 
+    max-height: 75vh !important; /* 让竖图可以展示得更长一点 */
+    object-fit: contain;
+}
+
+/* ==========================================
+   🚀 终极性能优化：强制开启 GPU 加速
+========================================== */
+/* 让耗费性能的元素交给手机的图形处理器（GPU）处理，滑动更丝滑 */
+.scrapbook-item, .cloud, .elegant-hint {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0); 
+}
+
+/* ==========================================
+   📱 移动端专属减负模式 (拯救掉帧与卡顿)
+========================================== */
+@media (max-width: 768px) {
+    /* 1. 关闭极其耗费手机性能的毛玻璃 (blur) 效果，改用纯色替代 */
+    .viewer-overlay, 
+    .elegant-hint, 
+    .timeline-nav, 
+    .timeline-dot span {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+    
+    .viewer-overlay {
+        background: rgba(0, 0, 0, 0.95) !important; /* 用深色纯黑代替模糊 */
+    }
+    .elegant-hint, .timeline-nav, .timeline-dot span {
+        background: rgba(255, 253, 247, 0.98) !important; /* 用不透明的乳白色代替模糊 */
+    }
+
+    /* 2. 隐藏漂浮的灰尘粒子和多余的云朵（粒子系统是手机 CPU 杀手） */
+    .dust-particles { display: none !important; }
+    .cloud-3, .cloud-4 { display: none !important; }
+
+    /* 3. 简化照片的阴影，避免滑动时手机频繁重绘图形 */
+    .scrapbook-item {
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
+    }
+}

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《拾光》- 生日快乐</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300;400;500&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="theme-morning scroll-locked">
+
+    <button id="musicBtn" class="music-btn" title="播放音乐">🎵</button>
+    <audio id="bgMusic" loop>
+        <source src="music/bgm.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="envelope-screen" class="envelope-screen">
+        <div class="envelope-container" id="open-envelope-btn">
+            <div class="envelope-icon">✉️</div>
+            <h3 class="envelope-title handwriting">拾光 · 序</h3>
+            <span class="envelope-hint">点击开启</span>
+        </div>
+    </div>
+
+    <section id="hero" class="hero">
+        <div class="clouds-container">
+            <div class="cloud cloud-1">☁️</div>
+            <div class="cloud cloud-2">☁️</div>
+            <div class="cloud cloud-3">☁️</div>
+            <div class="cloud cloud-4">☁️</div>
+        </div>
+
+        <div class="dust-particles"></div> 
+
+        <div class="intro-text-container">
+            <p class="fade-line">人生，就像一本故事集</p>
+            <p class="fade-line">我们永远无法预知片刻的价值</p>
+            <p class="fade-line">直至片刻成为永恒</p>
+            <p class="fade-line">愿这本回忆录，能够让你重温我们在一起的时光。</p>
+            
+            <button id="openBookBtn" class="open-book-btn fade-line">
+                📖 翻开首页
+            </button>
+        </div>
+    </section>
+
+    <div id="scrapbook" class="scrapbook-container">
+ 
+        <section id="chapter-1" class="chapter-cover" data-theme="morning">
+            <div class="chapter-title-wrapper paper-texture">
+                <div class="tape tape-top-center"></div>
+                <h2 class="chapter-num">Chapter One</h2>
+                <h1 class="chapter-name handwriting">初识</h1>
+                <p class="chapter-subtitle">故事的开始，总是在一个最普通的日子</p>
+            </div>
+        </section>
+
+        <section class="gallery-section" data-theme="morning">
+            <div class="scrapbook-wall">
+                <div class="scrapbook-item" data-date="2025.10.02" data-memory="还记得我们相识的那天，那时候的我一个人吃着饭，你和你的朋友们过来拼桌，我们就这样认识了。">
+                    <!-- 🌟 新的高级感呼吸提示 -->
+                    <div class="elegant-hint handwriting">✨ 点击照片，翻看背面的故事</div>
+                    <div class="photo-placeholder">
+                        <img src="images/chapter1/001.jpg" alt="茫茫人海中的相遇">
+                    </div>
+                    <p class="caption handwriting">我们的故事，从这里开始</p>
+                </div>
+
+                <div class="scrapbook-item" data-date="2025.10.29" data-memory="从这天起，很多事情，从「我」变成了「我们」。后来，我们一起加入了Robocon、IDEA Fair还有小草颂。">
+                    <div class="photo-placeholder">
+                        <img src="images/chapter1/003.jpg" alt="LGM迎新夜">
+                    </div>
+                    <p class="caption handwriting">LGM迎新夜，我们的第一次合照。</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="page-divider"></div>
+
+        <section id="chapter-2" class="chapter-cover" data-theme="afternoon">
+            <div class="chapter-title-wrapper paper-texture">
+                <div class="tape tape-top-center"></div>
+                <h2 class="chapter-num">Chapter Two</h2>
+                <h1 class="chapter-name handwriting">日常</h1>
+                <p class="chapter-subtitle">日子很普通，但因为有你而特别。</p>
+            </div>
+        </section>
+
+        <section class="gallery-section" data-theme="afternoon">
+            <div class="scrapbook-wall">
+                
+                <div class="scrapbook-item" data-date="2025.10.20" data-memory="做我的猫，让我撸一撸好吗。">
+                    <div class="photo-placeholder">
+                        <img src="images/chapter2/001.jpg" alt="温顺的猫与温柔的你">
+                    </div>
+                    <p class="caption handwriting">温顺的猫与温柔的你。</p>
+                </div>
+                
+                <div class="scrapbook-item" data-date="2025.10.19" data-type="video" data-memory="还记得当初刚接触C++不久的我们一起做了个‘猜数字’游戏，结果越是测试便发现越多Bug。">
+                    <div class="photo-placeholder">
+                        <video autoplay loop muted playsinline>
+                            <source src="videos/chapter2/002.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <p class="caption handwriting">在 Bilik Belajar 玩 C++ 与打游戏的我们。</p>
+                </div>
+                
+                <div class="scrapbook-item" data-date="2025.10.21" data-memory="那天的风很大，你的笑容很灿烂。">
+                    <div class="photo-placeholder">
+                        <img src="images/chapter2/002.jpg" alt="金毛狮王">
+                    </div>
+                    <p class="caption handwriting">被风吹成狮子的你 🦁</p>
+                </div>
+                
+                <div class="scrapbook-item landscape" data-date="2025.10.19" data-memory="让我摸摸，看你肌肉结实吗。">
+                    <div class="photo-placeholder">
+                        <img src="images/chapter2/009.jpg" alt="秀肌肉">
+                    </div>
+                    <p class="caption handwriting">大秀肌肉的你 💪</p>
+                </div>
+
+                <div class="scrapbook-item portrait" data-date="2025.10.18" data-type="video" data-memory="本来想拍照片的，但不小心切到录影模式了，于是随随便便拍了起来。">
+                    <div class="photo-placeholder">
+                        <video autoplay loop muted playsinline>
+                            <source src="videos/chapter2/003.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <p class="caption handwriting">Koperasi 里的无厘头搞怪瞬间。</p>
+                </div>
+
+                <div class="scrapbook-item wide-layout" data-date="2025.12.25/2026.04.18" data-memory="这两张放一起莫名的合适。">
+                    <div class="paper-clip">📎</div>
+                    <div class="photo-placeholder photo-grid">
+                        <img src="images/chapter2/004-1.jpg" alt="短发的你">
+                        <img src="images/chapter2/004-2.jpg" alt="长发的你">
+                    </div>
+                    <p class="caption handwriting">短发的你与长发的你</p>
+                </div>
+
+                <div class="scrapbook-item portrait" data-date="2026.01.15" data-type="video" data-memory="手残的我，专心听你弹琴就好。">
+                    <div class="photo-placeholder">
+                        <video autoplay loop muted playsinline>
+                            <source src="videos/chapter2/005.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <p class="caption handwriting">你弹，我听，一切刚好。</p>
+                </div>
+
+                <div class="scrapbook-item landscape" data-date="2026.01.27" data-type="video" data-memory="那天考试的时候没见到你，整个人有些心绪不宁。从考场出来收到你的消息后，就赶去看你了。看到你的时候，心里说不上来是什么感觉，也不知该说些什么。">
+                    <div class="photo-placeholder">
+                        <video autoplay loop muted playsinline>
+                            <source src="videos/chapter2/006.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <p class="caption handwriting">收到你消息时，心跳漏了一拍的瞬间。</p>
+                </div>
+
+                <div class="scrapbook-item landscape" data-date="2026.06.09" data-memory="">
+                    <div class="photo-placeholder">
+                        <img src="images/chapter2/007.jpg" alt="可可爱爱的你">
+                    </div>
+                    <p class="caption handwriting">奇奇怪怪、可可爱爱的你。</p>
+                </div>
+
+                <div class="scrapbook-item" data-date="2026.04.18" data-memory="Uncle，买报纸吗？">
+                    <div class="photo-placeholder">
+                        <img src="images/chapter2/010.jpg" alt="Uncle">
+                    </div>
+                    <p class="caption handwriting">Kopitiam里的Uncle。</p>
+                </div>
+
+                <div class="scrapbook-item" data-date="2026.06.16" data-memory="你安静睡着的样子，有点乖。">
+                    <div class="photo-placeholder">
+                        <img src="images/chapter2/008.jpg" alt="在课堂上睡着的你">
+                    </div>
+                    <p class="caption handwriting">上课时钓鱼的你</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="page-divider"></div>
+
+        <section id="chapter-3" class="chapter-cover" data-theme="dusk">
+            <div class="chapter-title-wrapper paper-texture">
+                <div class="tape tape-top-center"></div>
+                <h2 class="chapter-num">Chapter Three</h2>
+                <h1 class="chapter-name handwriting">同行</h1>
+                <p class="chapter-subtitle">谢谢你陪我走过这一段路</p>
+            </div>
+        </section>
+
+        <section class="gallery-section" data-theme="dusk">
+            <div class="scrapbook-wall">
+                
+                <div class="scrapbook-item" data-date="2025.12.01" data-memory="谢谢你那时候陪着我做Soldering，那是我们第一次一起通宵。也要特别感谢为了照顾我们而生病的Wen Hao。">
+                    <div class="photo-placeholder">
+                        <img src="images/chapter3/000.jpg" alt="MRC-属于我们的机械车">
+                    </div>
+                    <p class="caption handwriting">我们努力了一周的成果。</p>
+                </div>
+
+                <div class="scrapbook-item wide-layout" data-date="2025.12.28" data-memory="">
+                    <div class="paper-clip">📎</div>
+                    <div class="photo-placeholder photo-grid">
+                        <img src="images/chapter3/001.jpg" alt="还是爱着你">
+                        <img src="images/chapter3/002.jpg" alt="我们是冠军">
+                    </div>
+                    <p class="caption handwriting">灯光、舞台，还有那首《还是爱着你》，这一刻永远闪耀。</p>
+                </div>
+
+                <div class="scrapbook-item wide-layout" data-date="2026.03.14" data-memory="花费了三个星期，做出属于我们的R1。">
+                    <div class="paper-clip">📎</div>
+                    <div class="photo-placeholder photo-grid">
+                        <img src="images/chapter3/015.jpg" alt="Junior R1">
+                        <img src="images/chapter3/014.jpg" alt="R1合照">
+                    </div>
+                    <p class="caption handwriting">热情高涨的Internal 1</p>
+                </div>
+
+                <div class="scrapbook-item" data-date="2026.04.12" data-memory="你的反应，我很喜欢。">
+                    <div class="photo-placeholder">
+                        <img src="images/chapter3/005.jpg" alt="猝不及防被抬起来的瞬间">
+                    </div>
+                    <p class="caption handwriting">猝不及防被抬起来的瞬间。</p>
+                </div>
+
+                <div class="scrapbook-item" data-date="2026.04.26" data-memory="希望日后能够见证你更多的表演时刻。">
+                    <div class="photo-placeholder">
+                        <img src="images/chapter3/004.jpg" alt="在舞台上闪闪发光的你">
+                    </div>
+                    <p class="caption handwriting">在舞台上闪闪发光的你。</p>
+                </div>
+
+                <div class="scrapbook-item" data-date="2026.05.07" data-memory="通宵了5天，没有下次了。">
+                    <div class="photo-placeholder">
+                        <img src="images/chapter3/003.jpg" alt="Internal 4">
+                    </div>
+                    <p class="caption handwriting">辛苦你了，陪我通宵，陪我疯。</p>
+                </div>
+
+                <div class="scrapbook-item portrait" data-date="2026.06.02" data-memory="明年做简单点的，别为难我们自己了。">
+                    <div class="photo-placeholder">
+                        <img src="images/chapter3/016.jpg" alt="Gimmick">
+                    </div>
+                    <p class="caption handwriting">最后一次，也是第一次参与做Gimmick的你</p>
+                </div>
+
+                <div class="scrapbook-item" data-date="2026.06.06" data-memory="认真工作的你，很迷人。">
+                    <div class="photo-placeholder">
+                        <img src="images/chapter3/006.jpg" alt="认真工作的男人最帅了">
+                    </div>
+                    <p class="caption handwriting">偷拍成功。</p>
+                </div>
+
+                <div class="scrapbook-item filmstrip portrait-film" data-date="2026.06.06" data-memory="">
+                    <div class="tape tape-top-center"></div>
+                    <div class="photo-placeholder">
+                        <img src="images/chapter3/007.jpg" alt="Setup-ing 1">
+                        <img src="images/chapter3/008.jpg" alt="Setup-ing 2">
+                        <img src="images/chapter3/009.jpg" alt="Setup-ing 3">
+                    </div>
+                    <p class="caption handwriting">化妆ing。</p>
+                </div>   
+
+                <div class="scrapbook-item filmstrip portrait-film" data-date="2026.06.06" data-memory="">
+                    <div class="tape tape-top-center"></div>
+                    <div class="photo-placeholder">
+                        <img src="images/chapter3/010.jpg" alt="妆前">
+                        <img src="images/chapter3/011.jpg" alt="妆后1">
+                        <img src="images/chapter3/012.jpg" alt="妆后2">
+                    </div>
+                    <p class="caption handwriting">本来只想拍两张对比照，结果拍了一堆。</p>
+                </div>
+
+                <div class="scrapbook-item" data-date="2026.06.06" data-memory="收工咯。">
+                    <div class="photo-placeholder">
+                        <img src="images/chapter3/013.jpg" alt="圆满落幕">
+                    </div>
+                    <p class="caption handwriting">LGM, No Music No Life</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="page-divider"></div>
+
+        <section id="chapter-4" class="chapter-cover" data-theme="night">
+            <div class="chapter-title-wrapper paper-texture">
+                <div class="tape tape-top-center"></div>
+                <h2 class="chapter-num">Chapter Four</h2>
+                <h1 class="chapter-name handwriting">我们</h1>
+                <p class="chapter-subtitle">不知不觉间，我们已经留下这么多故事。</p>
+            </div>
+        </section>
+
+        <section class="gallery-section" data-theme="night">
+            <div class="scrapbook-wall">
+                
+                <div class="scrapbook-item" data-date="2025.11.26" data-memory="">
+                    <div class="photo-placeholder">
+                        <img src="images/chapter4/000.jpg" alt="Memory">
+                    </div>
+                    <p class="caption handwriting">绝版狼尾。</p>
+                </div>
+
+                <div class="scrapbook-item filmstrip" data-date="2026.06.06" data-memory="">
+                    <div class="tape tape-top-center"></div>
+                    <div class="photo-placeholder">
+                        <img src="images/chapter4/001.jpg" alt="我们1">
+                        <img src="images/chapter4/002.jpg" alt="我们2">
+                        <img src="images/chapter4/003.jpg" alt="我们3">
+                    </div>
+                    <p class="caption handwriting">挑不出来，只好全放了。</p>
+                </div>
+
+                <div class="scrapbook-item" data-date="2026.06.06" data-memory="我很喜欢这张。">
+                    <div class="photo-placeholder">
+                        <img src="images/chapter4/004.jpg" alt="镜子里的我们">
+                    </div>
+                    <p class="caption handwriting">镜子里的我们。</p>
+                </div>
+
+                <div class="scrapbook-item" data-date="2026.06.06" data-memory="">
+                    <div class="photo-placeholder">
+                        <img src="images/chapter4/005.jpg" alt="下次换我骑你了">
+                    </div>
+                    <p class="caption handwriting">下次该换我骑你了。</p>
+                </div>
+
+                <div class="scrapbook-item landscape" data-date="2026.06.10" data-memory="">
+                    <div class="photo-placeholder">
+                        <img src="images/chapter4/006.jpg" alt="我们">
+                    </div>
+                    <p class="caption handwriting">每个Sem都要一起拍噢。</p>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="ending-section" id="ending" data-theme="night">
+            
+            <div class="ending-phase" id="phase-1">
+                <div class="final-photo-container" id="ending-slideshow">
+                    <img src="images/chapter1/001.jpg" class="slide-placeholder" alt="撑起高度">
+                    
+                    <img src="images/chapter1/001.jpg" class="slide active" alt="茫茫人海中的相遇">
+                    <img src="images/chapter1/003.jpg" class="slide" alt="第一次合照">
+
+                    <img src="images/chapter2/001.jpg" class="slide" alt="温顺的猫与温柔的你">
+                    <img src="images/chapter2/C++.jpg" class="slide" alt="在 Bilik Belajar 玩 C++ 与打游戏的我们">
+                    <img src="images/chapter2/002.jpg" class="slide" alt="金毛狮王">
+                     <img src="images/chapter2/009.jpg" class="slide" alt="大秀肌肉的你 💪">
+                    <img src="images/chapter2/Koperasi.jpg" class="slide" alt="Koperasi 里的无厘头搞怪瞬间">
+                    <img src="images/chapter2/004-1.jpg" class="slide" alt="短发的你">
+                    <img src="images/chapter2/004-2.jpg" class="slide" alt="长发的你">
+                    <img src="images/chapter2/Guitar.jpg" class="slide" alt="你弹，我听，一切刚好">
+                    <img src="images/chapter2/Injured.jpg" class="slide" alt="收到你消息时，心跳漏了一拍的瞬间">
+                    <img src="images/chapter2/007.jpg" class="slide" alt="奇奇怪怪、可可爱爱的你">
+                    <img src="images/chapter2/010.jpg" class="slide" alt="Kopitiam里的Uncle">
+                    <img src="images/chapter2/008.jpg" class="slide" alt="上课时钓鱼的你">
+
+                    <img src="images/chapter3/000.jpg" class="slide" alt="MRC-属于我们的机械车">
+                    <img src="images/chapter3/001.jpg" class="slide" alt="还是爱着你">
+                    <img src="images/chapter3/002.jpg" class="slide" alt="我们是冠军">
+                    <img src="images/chapter3/015.jpg" class="slide" alt="Junior R1">
+                    <img src="images/chapter3/014.jpg" class="slide" alt="R1合照">
+                    <img src="images/chapter3/005.jpg" class="slide" alt="猝不及防被抬起来的瞬间">
+                    <img src="images/chapter3/004.jpg" class="slide" alt="在舞台上闪闪发光的你">
+                    <img src="images/chapter3/003.jpg" class="slide" alt="辛苦你了，陪我通宵，陪我疯">
+                    <img src="images/chapter3/016.jpg" class="slide" alt="最后一次，也是第一次参与做Gimmick的你">
+                    <img src="images/chapter3/006.jpg" class="slide" alt="偷拍成功">
+                    <img src="images/chapter3/007.jpg" class="slide" alt="Setup-ing 1">
+                    <img src="images/chapter3/008.jpg" class="slide" alt="Setup-ing 2">
+                    <img src="images/chapter3/009.jpg" class="slide" alt="Setup-ing 3">
+                    <img src="images/chapter3/010.jpg" class="slide" alt="妆前">
+                    <img src="images/chapter3/011.jpg" class="slide" alt="妆后1">
+                    <img src="images/chapter3/012.jpg" class="slide" alt="妆后2">
+                    <img src="images/chapter3/013.jpg" class="slide" alt="LGM, No Music No Life">
+
+                    <img src="images/chapter4/000.jpg" class="slide" alt="绝版狼尾">
+                    <img src="images/chapter4/001.jpg" class="slide" alt="我们1">
+                    <img src="images/chapter4/002.jpg" class="slide" alt="我们2">
+                    <img src="images/chapter4/003.jpg" class="slide" alt="我们3">
+                    <img src="images/chapter4/004.jpg" class="slide" alt="镜子里的我们">
+                    <img src="images/chapter4/005.jpg" class="slide" alt="下次该换我骑你了">
+                    <img src="images/chapter4/006.jpg" class="slide" alt="每个Sem都要一起拍噢">
+                </div>
+            </div>
+
+            <div class="ending-phase" id="phase-2">
+                <p class="handwriting phase-2-text">复亮，谢谢你愿意花时间看到这里。</p>
+            </div>
+
+            <div class="ending-phase" id="phase-3">
+                <div class="phase-3-letter paper-texture">
+                    <div class="tape tape-top-right"></div>
+                    <p class="handwriting typing-line">老实说，当初制作这个网站，</p>
+                    <p class="handwriting typing-line">其实是我一时冲动。</p>
+                    <p class="handwriting typing-line">整理照片的时候，我才发现，</p>
+                    <p class="handwriting typing-line">手机里关于你的照片，</p>
+                    <p class="handwriting typing-line">占据了我相册的大半部分。</p>
+                    <p class="handwriting typing-line">......</p>
+                    <p class="handwriting typing-line">其实我并没有记录日常的习惯。</p>
+                    <p class="handwriting typing-line">一直以来，我都觉得真正珍贵的回忆，</p>
+                    <p class="handwriting typing-line">不会因为时间流逝而被遗忘。</p>
+                    <p class="handwriting typing-line">......</p>
+                    <p class="handwriting typing-line">但当我重新翻看这些照片时，</p>
+                    <p class="handwriting typing-line">才发现自己其实忘记了很多事情。</p>
+                    <p class="handwriting typing-line">有些当时看起来再普通不过的照片，</p>
+                    <p class="handwriting typing-line">如今再看，却装满了属于我们的回忆。</p>
+                    <p class="handwriting typing-line">谢谢你陪我一起留下这些故事。</p>
+                </div>
+            </div>
+
+            <div class="ending-phase" id="phase-4">
+                <p class="handwriting phase-4-bday">生日快乐，复亮。</p>
+            </div>
+
+        </section>
+
+    </div>
+
+    <div id="memory-viewer" class="memory-viewer">
+        <div class="viewer-overlay"></div>
+        <div class="viewer-content">
+            <button id="close-viewer" class="close-btn">✖</button>
+            <div class="viewer-media-container" id="viewer-media"></div>
+            <div class="viewer-details">
+                <span id="viewer-date" class="viewer-date"></span>
+                <div class="viewer-divider"></div>
+                <p id="viewer-caption" class="viewer-caption handwriting"></p>
+                <p id="viewer-memory" class="viewer-memory handwriting"></p>
+                <div class="viewer-divider"></div>
+                <div class="viewer-heart">❤️</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="timeline-nav" class="timeline-nav">
+        <div class="timeline-line"></div>
+        <a href="#chapter-1" class="timeline-dot active" data-target="chapter-1"><span>初识</span></a>
+        <a href="#chapter-2" class="timeline-dot" data-target="chapter-2"><span>日常</span></a>
+        <a href="#chapter-3" class="timeline-dot" data-target="chapter-3"><span>同行</span></a>
+        <a href="#chapter-4" class="timeline-dot" data-target="chapter-4"><span>我们</span></a>
+        <a href="#ending" class="timeline-dot" data-target="ending"><span>未完待续</span></a>
+    </div>
+
+    <button id="timeline-toggle" class="timeline-toggle" title="展开时光轴">📍</button>
+
+    <div id="blackout-screen" class="screen-blackout">
+        <p class="handwriting final-whisper">希望明年，后年，甚至很多年后，还能继续往这本回忆录里增添属于我们的故事。</p>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
