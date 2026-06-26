@@ -550,22 +550,22 @@ body.theme-night { background-color: var(--bg-night); }
 }
 
 /* ==========================================
-   🌟 竖屏胶卷专属：放大时强行并排显示3张
+   🌟 竖屏胶卷专属：仅限【电脑端】并排显示3张
 ========================================== */
-.viewer-media-container.portrait-film-viewer {
-    justify-content: center; /* 居中显示，不要靠左 */
-}
-.viewer-media-container.portrait-film-viewer img {
-    /* 强行平分宽度，减去中间的gap缝隙，完美挤进同一屏幕 */
-    max-width: calc(33.333% - 15px) !important; 
-    max-height: 75vh !important; /* 让竖图可以展示得更长一点 */
-    object-fit: contain;
+@media (min-width: 769px) { /* 👈 加上这个限制，手机端就会乖乖恢复单张滑动，不再挤成一团！ */
+    .viewer-media-container.portrait-film-viewer {
+        justify-content: center; 
+    }
+    .viewer-media-container.portrait-film-viewer img {
+        max-width: calc(33.333% - 15px) !important; 
+        max-height: 75vh !important; 
+        object-fit: contain;
+    }
 }
 
 /* ==========================================
    🚀 终极性能优化：强制开启 GPU 加速
 ========================================== */
-/* 让耗费性能的元素交给手机的图形处理器（GPU）处理，滑动更丝滑 */
 .scrapbook-item, .cloud, .elegant-hint {
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
@@ -573,31 +573,33 @@ body.theme-night { background-color: var(--bg-night); }
 }
 
 /* ==========================================
-   📱 移动端专属减负模式 (拯救掉帧与卡顿)
+   📱 移动端专属减负模式 (拯救掉帧与卡顿 & 修复排版)
 ========================================== */
 @media (max-width: 768px) {
-    /* 1. 关闭极其耗费手机性能的毛玻璃 (blur) 效果，改用纯色替代 */
     .viewer-overlay, 
     .elegant-hint, 
-    .timeline-nav, 
-    .timeline-dot span {
+    .timeline-nav {
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
     }
     
-    .viewer-overlay {
-        background: rgba(0, 0, 0, 0.95) !important; /* 用深色纯黑代替模糊 */
-    }
-    .elegant-hint, .timeline-nav, .timeline-dot span {
-        background: rgba(255, 253, 247, 0.98) !important; /* 用不透明的乳白色代替模糊 */
-    }
+    .viewer-overlay { background: rgba(0, 0, 0, 0.95) !important; }
+    .elegant-hint, .timeline-nav { background: rgba(255, 253, 247, 0.98) !important; }
 
-    /* 2. 隐藏漂浮的灰尘粒子和多余的云朵（粒子系统是手机 CPU 杀手） */
+    /* 隐藏漂浮的灰尘粒子，保留云朵 */
     .dust-particles { display: none !important; }
-    .cloud-3, .cloud-4 { display: none !important; }
+    .scrapbook-item { box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important; }
 
-    /* 3. 简化照片的阴影，避免滑动时手机频繁重绘图形 */
-    .scrapbook-item {
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
+    /* 👈 核心修复：彻底解决时光轴文字“未完待续”等在手机上乱飘挡画面的Bug */
+    .timeline-dot span { 
+        opacity: 0 !important; 
+        background: none !important; 
+        box-shadow: none !important; 
+    }
+    /* 只有当点开侧边栏时，文字才会出现 */
+    .timeline-nav.mobile-open .timeline-dot span { 
+        opacity: 1 !important; 
+        transform: translateX(0); 
+        padding-right: 5px;
     }
 }
