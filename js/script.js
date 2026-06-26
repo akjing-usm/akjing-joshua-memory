@@ -243,8 +243,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function closeViewer() {
         viewer.classList.remove('active');
-        document.body.style.overflow = 'auto'; 
-        document.body.style.overflowX = 'hidden'; 
+        // 👈 核心修复：清空内联样式，把控制权还给 CSS，彻底解决关闭照片后手机滑动卡住的问题！
+        document.body.style.overflow = ''; 
+        document.body.style.overflowX = ''; 
         
         // 恢复时光轴
         document.getElementById('timeline-nav').style.display = 'flex';
@@ -261,7 +262,6 @@ document.addEventListener('DOMContentLoaded', () => {
             wasMusicPlaying = false; 
         }
 
-        // 👈 核心修复1：将定时器赋值给变量，以便随时被拦截
         clearViewerTimeout = setTimeout(() => { viewerMedia.innerHTML = ''; }, 500); 
     }
     
