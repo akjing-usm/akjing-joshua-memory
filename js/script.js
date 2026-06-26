@@ -319,12 +319,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     lockManualScroll();
                     const slideshow = entry.target.querySelector('#ending-slideshow');
                     
-                    // 🎥 【终极防翻车：强行留白居中法】
-                    // 放弃计算高度！直接命令相框距离屏幕顶部预留 15vh (15% 屏幕高度) 的安全距离！
-                    cinematicScrollTo(slideshow, 1000, -(window.innerHeight * 0.13));
+                    // 🎥 【智能高度大脑】
+                    const isMobile = window.innerWidth <= 768;
+                    // 手机屏幕又细又长，留出 25% 顶部空白才能视觉居中；电脑依然用 12.5%
+                    const topOffset = isMobile ? -(window.innerHeight * 0.25) : -(window.innerHeight * 0.125);
+                    cinematicScrollTo(slideshow, 1000, topOffset);
                     
                     const slides = slideshow.querySelectorAll('.slide');
                     let current = 0;
+                    
+                    // 🎥 【智能防卡顿大脑】
+                    // 手机显卡弱，延长到 800ms 保证每张图完整加载并显示；电脑依然用干脆的 500ms
+                    const flashSpeed = isMobile ? 800 : 500;
                     
                     setTimeout(() => {
                         const slideInterval = setInterval(() => {
@@ -343,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     }, 1000); 
                                 }, 1500); 
                             }
-                        }, 500); 
+                        }, flashSpeed); // 👈 使用自动判定的速度
                     }, 3500); 
                 }
                 
@@ -361,7 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(entry.target.id === 'phase-3' && !entry.target.classList.contains('typed')) {
                     entry.target.classList.add('typed');
                     const lines = entry.target.querySelectorAll('.typing-line');
-                    const typeSpeed = 4200; 
+                    const typeSpeed = 4100; 
                     
                     setTimeout(() => {
                         lines.forEach((line, index) => {

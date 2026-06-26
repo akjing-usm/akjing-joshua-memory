@@ -179,7 +179,9 @@ body.theme-night { background-color: var(--bg-night); }
     overflow: hidden; 
     border-radius: 2px; 
     transform: translateZ(0); 
-    position: relative; /* 👈 必须有这个，标签才能悬浮在照片里面 */
+    position: relative; 
+    /* 👇 补上带有 -webkit- 的前缀，彻底解决边角刺出相框的问题 */
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
     mask-image: -webkit-radial-gradient(white, black);
 }
 .photo-placeholder img, .photo-placeholder video { 
@@ -238,12 +240,18 @@ body.theme-night { background-color: var(--bg-night); }
 
 /* --- MEMORY VIEWER (Lightbox) --- */
 .memory-viewer {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    position: fixed; top: 0; left: 0; width: 100vw; 
+    height: 100vh; height: 100dvh; /* 👈 使用 100dvh，完美适配所有手机，底部绝对不再露馅！ */
     display: flex; justify-content: center; align-items: center;
     z-index: 10000; opacity: 0; pointer-events: none; transition: 0.5s ease;
 }
 .memory-viewer.active { opacity: 1; pointer-events: auto; }
-.viewer-overlay { position: absolute; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); }
+.viewer-overlay { 
+    position: fixed; /* 👈 从 absolute 改为 fixed，死死锁住背景 */
+    top: 0; left: 0; width: 100vw; 
+    height: 100vh; height: 100dvh; 
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); 
+}
 
 /* 长内容上下滑动 */
 .viewer-content {
@@ -468,92 +476,20 @@ body.theme-night { background-color: var(--bg-night); }
 }
 
 /* ==========================================
-   🌟 移动端专属适配：防止结尾信件文字被切断
+   🌟 强制限制放大框内的视频高度
 ========================================== */
-@media (max-width: 768px) {
-    /* 1. 让信纸在手机上占据更多横向空间，并减小左右内边距 */
-    .phase-3-letter { 
-        width: 95%; 
-        padding: 40px 20px; 
-    }
-    
-    /* 2. 缩小打字机文字的大小和字间距，确保一行能塞下15-20个字 */
-    .typing-line { 
-        font-size: 16px; 
-        letter-spacing: 1px; 
-        line-height: 2; 
-        margin-bottom: 8px;
-    }
-
-    /* 3. 顺便把最后那句生日快乐也等比例缩小，防止溢出 */
-    .phase-4-bday { 
-        font-size: 26px; 
-        letter-spacing: 3px; 
-    }
-}
-
-/* ==========================================
-   🌟 Phase 1: 电影级快速闪回轮播
-========================================== */
-#ending-slideshow {
-    position: relative;
-    transition: opacity 2.5s ease; /* 最后的缓慢淡出时间 */
-}
-#ending-slideshow.fade-out {
-    opacity: 0;
-    pointer-events: none;
-}
-.slide-placeholder {
-    visibility: hidden; /* 透明的占位图，用来让白色相纸维持正确的大小 */
-    width: 100%; height: auto; display: block; 
-}
-#ending-slideshow .slide {
-    position: absolute;
-    top: 15px; left: 15px;
-    width: calc(100% - 30px);
-    height: calc(100% - 55px);
-    
-    /* 👈 1. 核心修改：把原本的 cover 改成 contain，保证完整显示不裁剪 */
-    object-fit: contain; 
-    
-    /* 👈 2. 强烈建议加这行：因为 contain 会在边缘留白，加上黑色背景会像“电影画幅”一样，非常高级！ */
-    background-color: #000; 
-
-    border-radius: 2px;
-    opacity: 0;
-    transition: opacity 0.15s ease;
-}
-#ending-slideshow .slide.active {
-    opacity: 1;
+.viewer-media-container video {
+    max-height: 56vh !important;
+    height: auto !important;
+    width: auto !important;
+    max-width: 85vw !important;
+    object-fit: contain;
 }
 
 /* ==========================================
    🚀 性能优化：强制开启 GPU 硬件加速
 ========================================== */
-
-/* 让耗费性能的元素交给显卡处理，而不是 CPU */
-.scrapbook-item, 
-.cloud, 
-.dust-particles, 
-.elegant-hint, 
-.timeline-nav,
-#ending-slideshow .slide { /* 👈 把这行加进去，给蒙太奇照片开启极速渲染 */
-    will-change: transform, opacity;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    transform: translateZ(0); 
-}
-
-/* 优化投影和毛玻璃在滑动时的卡顿 */
-.decor, 
-.photo-placeholder {
-    transform: translateZ(0);
-}
-
-/* ==========================================
-   🚀 性能优化：强制开启 GPU 硬件加速
-========================================== */
-.scrapbook-item, .cloud, .elegant-hint, .timeline-nav {
+.scrapbook-item, .cloud, .elegant-hint, .timeline-nav, #ending-slideshow .slide {
     will-change: transform, opacity;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
@@ -564,7 +500,7 @@ body.theme-night { background-color: var(--bg-night); }
 /* ==========================================
    🌟 竖屏胶卷专属：仅限【电脑端】并排显示3张
 ========================================== */
-@media (min-width: 769px) { /* 👈 加上了这个限制，手机上就会恢复一张张看！ */
+@media (min-width: 769px) { 
     .viewer-media-container.portrait-film-viewer { justify-content: center; }
     .viewer-media-container.portrait-film-viewer img {
         max-width: calc(33.333% - 15px) !important; 
@@ -574,23 +510,39 @@ body.theme-night { background-color: var(--bg-night); }
 }
 
 /* ==========================================
-   📱 移动端专属减负模式 (拯救掉帧与卡顿)
+   📱 移动端全能适配优化 (排版 + 减负 + 细节修复)
 ========================================== */
 @media (max-width: 768px) {
-    .viewer-overlay, .elegant-hint, .timeline-nav, .timeline-dot span {
+    /* 1. 信封与打字排版修复 */
+    .phase-3-letter { width: 88%; max-width: 320px; padding: 40px 20px 40px 25px; }
+    .typing-line { font-size: 15.5px; letter-spacing: 1.5px; line-height: 2.4; margin-bottom: 8px; }
+    .phase-4-bday { font-size: 26px; letter-spacing: 3px; }
+    .fade-line { font-size: 18px; padding: 0 20px; line-height: 2.2; }
+    .phase-2-text { font-size: 22px; padding: 0 30px; line-height: 2; }
+    .final-whisper { font-size: 21px; padding: 0 30px; line-height: 2.2; }
+
+    /* 2. 移除毛玻璃，隐藏灰尘 */
+    .viewer-overlay, .elegant-hint, .timeline-nav {
         backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
     }
     .viewer-overlay { background: rgba(0, 0, 0, 0.95) !important; }
-    .elegant-hint, .timeline-nav, .timeline-dot span { background: rgba(255, 253, 247, 0.98) !important; }
-    
-    /* 恢复了云朵显示，只隐藏耗性能的微小尘埃粒子 */
+    .elegant-hint, .timeline-nav { background: rgba(255, 253, 247, 0.98) !important; }
     .dust-particles { display: none !important; }
-
     .scrapbook-item { box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important; }
+    
+    /* 👈 核心修复：强制在手机上调高云朵的可见度，终于能看到了！ */
+    .cloud { opacity: 0.15 !important; } 
 
-    /* 修复时光轴文字乱飘 Bug：只有菜单打开时才显示文字 */
-    .timeline-dot span { opacity: 0; }
+    /* 👈 核心修复：用 !important 彻底镇压时光轴文字，不再乱飘！ */
+    .timeline-dot span { 
+        opacity: 0 !important; 
+        background: none !important; 
+        box-shadow: none !important; 
+        pointer-events: none;
+    }
     .timeline-nav.mobile-open .timeline-dot span { 
-        opacity: 1; transform: translateX(0); background: none; box-shadow: none; padding-right: 5px;
+        opacity: 1 !important; 
+        transform: translateX(0); 
+        padding-right: 5px;
     }
 }
