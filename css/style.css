@@ -371,15 +371,47 @@ body.theme-night { background-color: var(--bg-night); }
 .timeline-toggle.show-btn { opacity: 1; visibility: visible; }
 .timeline-toggle:hover { transform: scale(1.1); }
 
+/* ==========================================
+   📱 移动端专属减负模式 & 终极排版优化
+========================================== */
 @media (max-width: 768px) {
-    .timeline-nav {
-        right: -180px; background: rgba(255, 253, 247, 0.95); backdrop-filter: blur(10px);
-        padding: 30px 20px; border-radius: 12px 0 0 12px; box-shadow: -5px 0 20px var(--shadow-deep);
+    /* 1. 关闭极其耗费性能的毛玻璃，改用纯色替代 */
+    .viewer-overlay, .elegant-hint, .timeline-nav, .timeline-dot span {
+        backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
     }
-    .timeline-nav.mobile-open { right: 0; }
-    .timeline-toggle { display: block; }
-    .timeline-dot span { opacity: 1; transform: translateX(0); background: none; box-shadow: none; padding-right: 5px;}
-    .timeline-line { right: 26.5px; }
+    .viewer-overlay { background: rgba(0, 0, 0, 0.95) !important; }
+    .elegant-hint, .timeline-nav, .timeline-dot span { background: rgba(255, 253, 247, 0.98) !important; }
+    .dust-particles, .cloud-3, .cloud-4 { display: none !important; }
+    .scrapbook-item { box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important; }
+
+    /* ------------------------------------------
+       ✨ 核心审美修复区 ✨
+    ------------------------------------------ */
+    
+    /* 2. 修复开头、过场和黑屏文字的诡异断句 */
+    .fade-line { font-size: 18px; padding: 0 20px; line-height: 2.2; }
+    .phase-2-text { font-size: 22px; padding: 0 30px; line-height: 2; }
+    .final-whisper { font-size: 21px; padding: 0 30px; line-height: 2.2; }
+
+    /* 3. 修复信纸偏左、文字不居中的问题 */
+    .phase-3-letter { 
+        width: 88%; 
+        max-width: 320px; /* 👈 锁死最大宽度，让信纸紧紧包裹文字，实现视觉上的绝对居中 */
+        padding: 40px 20px 40px 25px; /* 左边稍微多留 5px，抵消视觉偏差 */
+    }
+    
+    /* 4. 最适合手机阅读的信件排版比例 */
+    .typing-line { 
+        font-size: 15.5px; 
+        letter-spacing: 1.5px; 
+        line-height: 2.4; 
+        margin-bottom: 8px;
+    }
+
+    .phase-4-bday { 
+        font-size: 26px; 
+        letter-spacing: 3px; 
+    }
 }
 
 /* Animations */
@@ -427,7 +459,7 @@ body.theme-night { background-color: var(--bg-night); }
    🌟 强制限制放大框内的视频高度
 ========================================== */
 .viewer-media-container video {
-    max-height: 57vh !important; /* 👈 加了 !important 强制生效 */
+    max-height: 56vh !important; /* 👈 加了 !important 强制生效 */
     height: auto !important;     /* 确保高度按比例自动调整 */
     width: auto !important;
     max-width: 85vw !important;

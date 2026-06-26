@@ -319,9 +319,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     lockManualScroll();
                     const slideshow = entry.target.querySelector('#ending-slideshow');
                     
-                    // 🎥 绝对居中相框
-                    const centerOffset = -(window.innerHeight / 2) + (slideshow.offsetHeight / 2);
-                    cinematicScrollTo(slideshow, 1000, centerOffset);
+                    // 🎥 【大道至简：蒙太奇完美居中】
+                    // 直接对齐 Phase-1 容器的最顶部 (offset 0)。
+                    // 因为容器本身刚好填满屏幕并自带居中属性，照片会被死死钉在正中心！
+                    cinematicScrollTo(entry.target, 1000, 0);
                     
                     const slides = slideshow.querySelectorAll('.slide');
                     let current = 0;
@@ -351,8 +352,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(entry.target.id === 'phase-2' && !entry.target.classList.contains('played')) {
                     entry.target.classList.add('played');
                     setTimeout(() => {
-                        const letterBox = document.querySelector('.phase-3-letter');
-                        cinematicScrollTo(letterBox, 3000, -50);
+                        // 🎥 【大道至简：解决信封顶部被切】
+                        // 不再去瞄准信纸了，直接瞄准 Phase-3 整个大容器的顶部！
+                        // 这样信封会自动端端正正地停在屏幕正中央，绝对不会少一块！
+                        cinematicScrollTo(document.getElementById('phase-3'), 3000, 0);
                     }, 4500);
                 }
                 
@@ -401,7 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { threshold: 0.3 }); 
 
     endingPhases.forEach(phase => phaseObserver.observe(phase));
-    
+
     // --- 🌟 TIMELINE NAVIGATION ENGINE ---
     const timelineNav = document.getElementById('timeline-nav');
     const timelineToggle = document.getElementById('timeline-toggle');
