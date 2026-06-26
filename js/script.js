@@ -321,7 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     // 🎥 【终极防翻车：强行留白居中法】
                     // 放弃计算高度！直接命令相框距离屏幕顶部预留 15vh (15% 屏幕高度) 的安全距离！
-                    cinematicScrollTo(slideshow, 1000, -(window.innerHeight * 0.15));
+                    cinematicScrollTo(slideshow, 1000, -(window.innerHeight * 0.13));
                     
                     const slides = slideshow.querySelectorAll('.slide');
                     let current = 0;
