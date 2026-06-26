@@ -314,7 +314,7 @@ body.theme-night { background-color: var(--bg-night); }
     font-size: 24px; color: var(--text-ink); line-height: 2.2; margin-bottom: 5px;
     white-space: nowrap; overflow: hidden; max-width: 0; 
 }
-.typing-line.type-active { animation: typeReveal 2.0s cubic-bezier(0.4, 0.0, 0.2, 1) forwards; }
+.typing-line.type-active { animation: typeReveal 3.0s cubic-bezier(0.4, 0.0, 0.2, 1) forwards; }
 
 /* Phase 4: Final Text */
 .phase-4-bday { font-size: 36px; color: #FFF; letter-spacing: 4px; text-align: center; }
@@ -503,11 +503,12 @@ body.theme-night { background-color: var(--bg-night); }
 .cloud, 
 .dust-particles, 
 .elegant-hint, 
-.timeline-nav {
+.timeline-nav,
+#ending-slideshow .slide { /* 👈 把这行加进去，给蒙太奇照片开启极速渲染 */
     will-change: transform, opacity;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    transform: translateZ(0); /* 触发硬件加速 */
+    transform: translateZ(0); 
 }
 
 /* 优化投影和毛玻璃在滑动时的卡顿 */

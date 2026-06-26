@@ -316,20 +316,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(entry.target.id === 'phase-1' && !entry.target.classList.contains('played')) {
                     entry.target.classList.add('played');
                     
-                    // 🚨 触发结局特效时，直接锁死用户的鼠标滚轮和手指滑动
                     lockManualScroll();
-                    
                     const slideshow = entry.target.querySelector('#ending-slideshow');
                     
-                    // 🎥 【核心修复 1：大道至简的居中】
-                    // 不再去算相框尺寸了！直接让 100vh 的背景大框(entry.target)对齐屏幕顶部(offset: 0)。
-                    // 因为背景框自带 flex 居中，照片绝对会被完美钉在屏幕正中心！
-                    cinematicScrollTo(entry.target, 1000, 0);
+                    // 🎥 绝对居中相框
+                    const centerOffset = -(window.innerHeight / 2) + (slideshow.offsetHeight / 2);
+                    cinematicScrollTo(slideshow, 1000, centerOffset);
                     
                     const slides = slideshow.querySelectorAll('.slide');
                     let current = 0;
                     
-                    // ⏳ 镜头魔法：Hold 住第一张合照 3.5 秒
                     setTimeout(() => {
                         const slideInterval = setInterval(() => {
                             slides.forEach(s => s.classList.remove('active'));
@@ -342,81 +338,70 @@ document.addEventListener('DOMContentLoaded', () => {
                                 
                                 setTimeout(() => {
                                     slideshow.classList.add('fade-out');
-                                    
                                     setTimeout(() => {
                                         cinematicScrollTo(document.getElementById('phase-2'), 2500, 0);
                                     }, 1000); 
-
                                 }, 1500); 
                             }
-                        }, 300); 
+                        }, 500); // 👈 手机防卡顿 500ms
                     }, 3500); 
                 }
                 
-                // 🌟 Phase 2: 短句过渡 (保持不变，省略...)
+                // 🌟 Phase 2: 短句过渡
                 if(entry.target.id === 'phase-2' && !entry.target.classList.contains('played')) {
                     entry.target.classList.add('played');
                     setTimeout(() => {
                         const letterBox = document.querySelector('.phase-3-letter');
-                        // 对齐信纸，留一点点呼吸空间 (-50)
                         cinematicScrollTo(letterBox, 3000, -50);
                     }, 4500);
                 }
                 
-                // 🌟 Phase 3: 自动打字信件
+                // 🌟 Phase 3 (与终极落幕): 自动打字信件
                 if(entry.target.id === 'phase-3' && !entry.target.classList.contains('typed')) {
                     entry.target.classList.add('typed');
                     const lines = entry.target.querySelectorAll('.typing-line');
-                    
-                    // 🎥 【核心修复 2：节奏提速】每行间隔从 2800 缩短到 2200 毫秒
-                    // 配合 CSS 的 2.0s，每句话打完会有 0.2 秒的停顿，像人呼吸一样自然，绝对不会觉得干等！
-                    const typeSpeed = 2200; 
+                    const typeSpeed = 3200; // 👈 深情慢速打字
                     
                     setTimeout(() => {
                         lines.forEach((line, index) => {
                             setTimeout(() => {
                                 line.classList.add('type-active');
-                                
-                                // 🎥 【核心修复 3：大幅上推防切字】
                                 if (line.textContent.trim() === '......') {
-                                    // 不要对齐中间了！直接向上推，让 ...... 停留在距离屏幕顶部只有 150px 的位置！
-                                    // 这样下方会腾出极大的空白，后面的 5 行字绝对能够完美显示。
                                     cinematicScrollTo(line, 2500, -150);
                                 }
-                                
                             }, index * typeSpeed); 
                         });
                         
                         const totalTime = lines.length * typeSpeed;
                         
+                        // 🎥 强制排队触发，防手机乱跳
                         setTimeout(() => {
                             cinematicScrollTo(document.getElementById('phase-4'), 4000, 0);
+                            
+                            setTimeout(() => {
+                                const blackout = document.getElementById('blackout-screen');
+                                blackout.classList.add('active');
+                                
+                                setTimeout(() => {
+                                    let vol = bgMusic.volume;
+                                    const fadeAudio = setInterval(() => {
+                                        if (vol > 0.05) { vol -= 0.05; bgMusic.volume = vol; } 
+                                        else { clearInterval(fadeAudio); bgMusic.pause(); }
+                                    }, 250); 
+                                }, 2000); 
+                                
+                            }, 4000 + 4500); 
+
                         }, totalTime + 2000); 
 
                     }, 2800); 
-                }
-                
-                // 🌟 Phase 4: 结局落幕与黑屏 (保持不变)
-                if(entry.target.id === 'phase-4' && !entry.target.classList.contains('triggered')) {
-                    entry.target.classList.add('triggered');
-                    setTimeout(() => {
-                        const blackout = document.getElementById('blackout-screen');
-                        blackout.classList.add('active');
-                        setTimeout(() => {
-                            let vol = bgMusic.volume;
-                            const fadeAudio = setInterval(() => {
-                                if (vol > 0.05) { vol -= 0.05; bgMusic.volume = vol; } 
-                                else { clearInterval(fadeAudio); bgMusic.pause(); }
-                            }, 250); 
-                        }, 2000); 
-                    }, 4500); 
                 }
             }
         });
     }, { threshold: 0.3 }); 
 
     endingPhases.forEach(phase => phaseObserver.observe(phase));
-
+    
     // --- 🌟 TIMELINE NAVIGATION ENGINE ---
     const timelineNav = document.getElementById('timeline-nav');
     const timelineToggle = document.getElementById('timeline-toggle');
