@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const unlockAction = () => {
             const pwd = gatePwd.value;
-            if (pwd === "0710") { // <--- 密码
+            if (pwd === "0710") { 
                 gate.style.opacity = '0';
                 setTimeout(() => { gate.style.display = 'none'; }, 500); 
             } else {
@@ -28,39 +28,31 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         gateBtn.addEventListener('click', unlockAction);
-        // 🌟 新增：支持按下键盘 Enter 键直接解锁
         gatePwd.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') unlockAction();
         });
     }
 
-    const devMode = false; // 上线前改成 false 才能看到信封开场！
+    const devMode = false; 
 
     // ==========================================
-    // 🚀 终极性能优化引擎 (智能媒体管家 - 修复整合版)
+    // 🚀 终极性能优化：图片与视频防卡顿管家
     // ==========================================
-    
-    // 1. 图片智能懒加载（滑动到附近才加载图片，极大降低初始卡顿和流量消耗）
     document.querySelectorAll('img:not(.slide)').forEach(img => {
         img.setAttribute('loading', 'lazy');
     });
 
-    // 2. 视频性能释放（只播放当前屏幕内的视频，滑走立刻暂停！）
     const lazyVideoObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                // 视频进入屏幕，开始播放
                 entry.target.play().catch(() => {});
             } else {
-                // 视频离开屏幕，立刻暂停，释放手机 CPU 性能！
                 entry.target.pause();
             }
         });
-    }, { threshold: 0.1 }); // 露出10%就开始触发
+    }, { threshold: 0.1 }); 
 
-    // 剥夺原本的无脑自动播放，全部交由管家智能控制
-    document.querySelectorAll('video').forEach(video => {
-        video.removeAttribute('autoplay'); 
+    document.querySelectorAll('.photo-placeholder video').forEach(video => {
         lazyVideoObserver.observe(video);
     });
 
@@ -83,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const bgMusic = document.getElementById('bgMusic');
     let isPlaying = false;
 
-    // 🌟 音乐按钮旋转特效 (CSS中设置为15秒缓慢旋转)
     function toggleMusic() {
         if (isPlaying) {
             bgMusic.pause();
@@ -139,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
         '<div class="decor ticket">🎫</div>',
         '<div class="decor leaf">🍂</div>',
         '<div class="decor small-note">✉️</div>',
-        '' // Nothing
+        '' 
     ];
 
     const paperColors = ['#FFFDF7', '#FDFBF7', '#FFFBF0', '#F9F6F0'];
@@ -150,15 +141,10 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     items.forEach(item => {
-        // 随机倾斜角度
         const tilt = (Math.random() * 8 - 4).toFixed(2);
         item.style.setProperty('--rot', `${tilt}deg`);
-
-        // 随机相纸底色和阴影
         item.style.backgroundColor = paperColors[Math.floor(Math.random() * paperColors.length)];
         item.style.boxShadow = shadowStyles[Math.floor(Math.random() * shadowStyles.length)];
-
-        // 随机小贴纸
         const hasManualDecor = item.querySelector('.tape') || item.querySelector('.paper-clip') || item.querySelector('.push-pin');
         if (!hasManualDecor) {
             const randomDecor = decorStyles[Math.floor(Math.random() * decorStyles.length)];
@@ -185,11 +171,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const viewerMemory = document.getElementById('viewer-memory');
     
     let wasMusicPlaying = false; 
-    let clearViewerTimeout; // 👈 核心修复1：专门用来防止“点击失效”的定时器拦截员
+    let clearViewerTimeout; 
 
     items.forEach(item => {
         item.addEventListener('click', () => {
-            clearTimeout(clearViewerTimeout); // 👈 核心修复1：一旦点开新照片，立刻拦截之前的清空命令！
+            clearTimeout(clearViewerTimeout); 
 
             const dateStr = item.getAttribute('data-date');
             const type = item.getAttribute('data-type') || 'image';
@@ -225,14 +211,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 viewerMedia.innerHTML = mediaSource;
             }
 
-            // 竖屏排版通行证
             if (item.classList.contains('portrait-film')) {
                 viewerMedia.classList.add('portrait-film-viewer');
             } else {
                 viewerMedia.classList.remove('portrait-film-viewer');
             }
 
-            // 沉浸模式隐藏时光轴
             document.getElementById('timeline-nav').style.display = 'none';
             if(document.getElementById('timeline-toggle')) document.getElementById('timeline-toggle').style.display = 'none';
 
@@ -243,11 +227,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function closeViewer() {
         viewer.classList.remove('active');
-        // 👈 核心修复：清空内联样式，把控制权还给 CSS，彻底解决关闭照片后手机滑动卡住的问题！
         document.body.style.overflow = ''; 
         document.body.style.overflowX = ''; 
         
-        // 恢复时光轴
         document.getElementById('timeline-nav').style.display = 'flex';
         if(document.getElementById('timeline-toggle')) document.getElementById('timeline-toggle').style.display = 'block';
 
@@ -269,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
     viewer.querySelector('.viewer-overlay').addEventListener('click', closeViewer);
 
     // ==========================================
-    // 🔒 霸道防破坏锁：结局运镜时禁止一切手动滑动
+    // 🔒 霸道防破坏锁
     // ==========================================
     function preventScroll(e) { e.preventDefault(); }
     function preventKeyScroll(e) { 
@@ -282,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // 🎥 终极电影级运镜系统 (平滑不卡顿)
+    // 🎥 终极电影级运镜系统
     // ==========================================
     let currentScrollAnimation = null; 
     
@@ -313,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentScrollAnimation = requestAnimationFrame(animation);
     }
 
-    // --- 4-PHASE CINEMATIC ENDING ENGINE (全恢复版) ---
+    // --- 4-PHASE CINEMATIC ENDING ENGINE ---
     const endingPhases = document.querySelectorAll('.ending-phase');
     
     const phaseObserver = new IntersectionObserver((entries) => {
@@ -321,24 +303,20 @@ document.addEventListener('DOMContentLoaded', () => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
                 
-                // 🌟 Phase 1: 蒙太奇快速闪回
+                // 🌟 Phase 1
                 if(entry.target.id === 'phase-1' && !entry.target.classList.contains('played')) {
                     entry.target.classList.add('played');
                     lockManualScroll();
                     const slideshow = entry.target.querySelector('#ending-slideshow');
                     
-                    // 🎥 【智能高度大脑】判定手机与电脑的完美居中位置
                     const isMobile = window.innerWidth <= 768;
                     const topOffset = isMobile ? -(window.innerHeight * 0.25) : -(window.innerHeight * 0.125);
                     cinematicScrollTo(slideshow, 1000, topOffset);
                     
                     const slides = slideshow.querySelectorAll('.slide');
                     let current = 0;
-                    
-                    // 🎥 【调整1：闪烁速度】废除手机特例，无论手机还是电脑，统一干脆的 500 毫秒！
                     const flashSpeed = 500;
                     
-                    // 🎥 【调整2：定格时间】减去 0.2 秒（从 3500 改为 3300），刚好留下准备情绪的时间
                     setTimeout(() => {
                         const slideInterval = setInterval(() => {
                             slides.forEach(s => s.classList.remove('active'));
@@ -360,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, 3300); 
                 }
                 
-                // 🌟 Phase 2: 短句过渡
+                // 🌟 Phase 2
                 if(entry.target.id === 'phase-2' && !entry.target.classList.contains('played')) {
                     entry.target.classList.add('played');
                     setTimeout(() => {
@@ -369,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, 4500);
                 }
                 
-                // 🌟 Phase 3 (与终极落幕): 自动打字信件
+                // 🌟 Phase 3 & 4
                 if(entry.target.id === 'phase-3' && !entry.target.classList.contains('typed')) {
                     entry.target.classList.add('typed');
                     const lines = entry.target.querySelectorAll('.typing-line');
@@ -388,8 +366,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         const totalTime = lines.length * typeSpeed;
                         
                         setTimeout(() => {
-                            // 🎥 【终极防穿帮】：强行给下方增加 30% 屏幕高度的物理留白！
-                            // 这样信封就会被远远地甩在屏幕上方，绝对不可能再露底！
                             document.getElementById('phase-4').style.marginTop = '30vh';
                             cinematicScrollTo(document.getElementById('phase-4'), 4000, 0);
                             
@@ -420,7 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     endingPhases.forEach(phase => phaseObserver.observe(phase));
 
-    // --- 🌟 TIMELINE NAVIGATION ENGINE ---
+    // --- TIMELINE NAVIGATION ENGINE ---
     const timelineNav = document.getElementById('timeline-nav');
     const timelineToggle = document.getElementById('timeline-toggle');
     const timelineDots = document.querySelectorAll('.timeline-dot');

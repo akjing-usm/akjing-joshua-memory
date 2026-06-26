@@ -1,6 +1,6 @@
 /*
 ==================================================
-Project : 《拾光》 V6.5 Ultimate Aesthetic Flow
+Project : 《拾光》 V6.5 Ultimate Aesthetic Flow (Final)
 ==================================================
 */
 
@@ -26,20 +26,17 @@ Project : 《拾光》 V6.5 Ultimate Aesthetic Flow
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* 彻底修复 Windows 电脑端双滚动条 (双bar) 惨案 */
+/* 彻底修复 Windows 电脑端双滚动条 (双bar) */
 html { 
     scroll-behavior: smooth; 
-    /* ❌ 绝不能在这里写 overflow 和 width，否则 Windows 必出第二条滚动条！ */
 }
 
-/* THEME TRANSITION ENGINE */
+/* THEME TRANSITION ENGINE & 彻底锁死手机左右晃动 */
 body {
     font-family: var(--font-std);
     color: var(--text-main);
     background-color: var(--bg-morning);
     transition: background-color 2.5s ease-in-out; 
-    
-    /* ✅ 所有的防溢出限制，全部交给 body 来做，这样永远只有一个主滚动条！ */
     overflow-x: hidden; 
     width: 100%;
     margin: 0;
@@ -50,6 +47,7 @@ body {
 body.scroll-locked { 
     overflow: hidden !important; 
     height: 100vh; 
+    width: 100%;
 }
 
 body.theme-morning { background-color: var(--bg-morning); }
@@ -168,7 +166,7 @@ body.theme-night { background-color: var(--bg-night); }
 
 .scrapbook-item {
     position: relative; background: var(--paper); padding: 15px 15px 40px 15px; 
-    width: 320px; /* 固定卡片宽度，保持阵型整齐 */
+    width: 320px;
     box-shadow: 2px 5px 15px var(--shadow-soft); cursor: pointer;
     opacity: 0; transform: translateY(50px) rotate(var(--rot, 0deg));
     transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
@@ -176,15 +174,15 @@ body.theme-night { background-color: var(--bg-night); }
 .scrapbook-item.visible { opacity: 1; transform: translateY(0) rotate(var(--rot, 0deg)); }
 .scrapbook-item:hover { transform: scale(1.03) rotate(0deg) !important; box-shadow: 0 15px 30px var(--shadow-deep); z-index: 10; }
 
-/* 🌟 照片防裁剪与 V5 固定比例修复 */
+/* 🌟 照片防裁剪与完美圆角修复 */
 .photo-placeholder { 
     width: 100%; 
     background: transparent; 
     overflow: hidden; 
     border-radius: 2px; 
     transform: translateZ(0); 
-    position: relative; 
-    /* 👇 补上带有 -webkit- 的前缀，彻底解决边角刺出相框的问题 */
+    position: relative;
+    /* 彻底解决手机端照片边角刺出相框的问题 */
     -webkit-mask-image: -webkit-radial-gradient(white, black);
     mask-image: -webkit-radial-gradient(white, black);
 }
@@ -196,7 +194,6 @@ body.theme-night { background-color: var(--bg-night); }
     pointer-events: none; 
 }
 
-/* 核心修复：强行把普通相纸的高度锁回 280px (V5 尺寸) */
 .scrapbook-item:not(.filmstrip):not(.wide-layout):not(.landscape):not(.portrait) .photo-placeholder {
     height: 280px; 
 }
@@ -205,35 +202,16 @@ body.theme-night { background-color: var(--bg-night); }
     height: 100%; 
 }
 
-/* 🌟 单张横屏照片/影片专属排版 */
-.landscape { 
-    width: 450px; /* 横屏卡片会比普通 320px 更宽，更有电影感 */
-}
-.landscape .photo-placeholder { 
-    height: auto; 
-}
-.landscape .photo-placeholder img, 
-.landscape .photo-placeholder video { 
-    height: auto; 
-    aspect-ratio: auto; /* 保持素材默认的原始比例 */
-}
+.landscape { width: 450px; }
+.landscape .photo-placeholder { height: auto; }
+.landscape .photo-placeholder img, .landscape .photo-placeholder video { height: auto; aspect-ratio: auto; }
 
-/* 🌟 单张竖屏照片/影片专属排版 */
-.portrait { 
-    width: 320px; /* 保持与普通卡片一样的宽度，显得整齐 */
-}
-.portrait .photo-placeholder { 
-    height: 400px; /* 比 V5 的 280px 高出很多，完美展现竖屏特写 */
-}
-.portrait .photo-placeholder img, 
-.portrait .photo-placeholder video { 
-    height: 100%; 
-    object-fit: cover; /* 多余边缘依然会自动裁剪，保持边缘平整 */
-}
+.portrait { width: 320px; }
+.portrait .photo-placeholder { height: 400px; }
+.portrait .photo-placeholder img, .portrait .photo-placeholder video { height: 100%; object-fit: cover; }
 
 .caption { margin-top: 25px; text-align: center; color: var(--text-ink); font-size: 21px; }
 
-/* Multi-photo layouts */
 .filmstrip { width: 290px; }
 .filmstrip .photo-placeholder { height: auto; background: transparent; display: flex; flex-direction: column; gap: 12px; }
 .filmstrip .photo-placeholder img { height: auto; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 2px; }
@@ -245,19 +223,17 @@ body.theme-night { background-color: var(--bg-night); }
 /* --- MEMORY VIEWER (Lightbox) --- */
 .memory-viewer {
     position: fixed; top: 0; left: 0; width: 100vw; 
-    height: 100vh; height: 100dvh; /* 👈 使用 100dvh，完美适配所有手机，底部绝对不再露馅！ */
+    height: 100vh; height: 100dvh; /* 适配 Safari 底部导航栏 */
     display: flex; justify-content: center; align-items: center;
     z-index: 10000; opacity: 0; pointer-events: none; transition: 0.5s ease;
 }
 .memory-viewer.active { opacity: 1; pointer-events: auto; }
 .viewer-overlay { 
-    position: fixed; /* 👈 从 absolute 改为 fixed，死死锁住背景 */
-    top: 0; left: 0; width: 100vw; 
+    position: fixed; top: 0; left: 0; width: 100vw; 
     height: 100vh; height: 100dvh; 
     background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); 
 }
 
-/* 长内容上下滑动 */
 .viewer-content {
     position: relative; width: 90%; max-width: 800px; padding: 20px;
     border-radius: 4px; z-index: 2; transform: scale(0.9); transition: 0.5s ease;
@@ -267,7 +243,6 @@ body.theme-night { background-color: var(--bg-night); }
 .viewer-content { -ms-overflow-style: none; scrollbar-width: none; }
 .memory-viewer.active .viewer-content { transform: scale(1); }
 
-/* 关闭按钮钉在右上角 */
 .close-btn { 
     position: fixed; top: 25px; right: 30px; background: none; border: none; 
     color: rgba(255, 255, 255, 0.7); font-size: 40px; cursor: pointer; 
@@ -275,7 +250,6 @@ body.theme-night { background-color: var(--bg-night); }
 }
 .close-btn:hover { transform: rotate(90deg) scale(1.1); color: #FFF; }
 
-/* 横向滑动多图模式 */
 .viewer-media-container { 
     width: 100%; max-height: 65vh; display: flex; flex-direction: row; align-items: center;
     gap: 20px; padding: 10px; overflow-x: auto; overflow-y: hidden;
@@ -291,7 +265,6 @@ body.theme-night { background-color: var(--bg-night); }
 .viewer-details { margin-top: 20px; text-align: center; }
 .viewer-date { display: inline-block; background: var(--tape); padding: 2px 10px; font-size: 14px; margin-bottom: 10px; transform: rotate(-1deg); color: var(--text-ink); font-weight: 500;}
 
-/* Caption & Long Memory */
 .viewer-caption { font-size: 28px; color: #FFF; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
 .viewer-memory {
     font-size: 18px; color: rgba(255, 255, 255, 0.85); margin-top: 15px;
@@ -302,7 +275,8 @@ body.theme-night { background-color: var(--bg-night); }
 /* --- 4-PHASE CINEMATIC ENDING --- */
 .ending-section { display: block; padding: 0; margin: 0; }
 .ending-phase { 
-    min-height: 100vh; width: 100vw; margin-left: calc(-50vw + 50%); 
+    min-height: 100vh; 
+    width: 100%; /* 👈 核心修复：彻底解决手机端左右晃动，删除了负数的margin */
     display: flex; flex-direction: column; justify-content: center; align-items: center; 
     opacity: 0; transform: translateY(30px); transition: opacity 2s ease, transform 2s ease; 
 }
@@ -392,7 +366,7 @@ body.theme-night { background-color: var(--bg-night); }
 @keyframes typeReveal { to { max-width: 100%; } }
 
 /* ==========================================
-   🌟 高级感照片点击提示（半透明悬浮）
+   🌟 高级感照片点击提示
 ========================================== */
 .elegant-hint {
     position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
@@ -425,7 +399,7 @@ body.theme-night { background-color: var(--bg-night); }
 .decor, .photo-placeholder { transform: translateZ(0); }
 
 /* ==========================================
-   🌟 竖屏胶卷专属：仅限【电脑端】并排显示3张
+   🌟 竖屏胶卷专属：仅限电脑端并排显示
 ========================================== */
 @media (min-width: 769px) { 
     .viewer-media-container.portrait-film-viewer { justify-content: center; }
@@ -435,7 +409,7 @@ body.theme-night { background-color: var(--bg-night); }
 }
 
 /* ==========================================
-   🌟 Phase 1: 电影级快速闪回轮播 (丢失的代码补回来了！)
+   🌟 Phase 1: 电影级快速闪回轮播
 ========================================== */
 #ending-slideshow { position: relative; transition: opacity 2.5s ease; }
 #ending-slideshow.fade-out { opacity: 0; pointer-events: none; }
@@ -448,7 +422,7 @@ body.theme-night { background-color: var(--bg-night); }
 #ending-slideshow .slide.active { opacity: 1; }
 
 /* ==========================================
-   📱 移动端全能适配优化 (完整修复版)
+   📱 移动端全能适配优化 (最终版)
 ========================================== */
 @media (max-width: 768px) {
     /* 1. 信封与打字排版修复 */
@@ -468,7 +442,7 @@ body.theme-night { background-color: var(--bg-night); }
     .dust-particles { display: none !important; }
     .scrapbook-item { box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important; }
 
-    /* 3. 彻底修复侧边栏：让它折叠起来，文字不再乱飘 */
+    /* 3. 彻底修复侧边栏：隐藏文字，点开才出 */
     .timeline-nav {
         right: -180px; background: rgba(255, 253, 247, 0.95); 
         padding: 30px 20px; border-radius: 12px 0 0 12px; box-shadow: -5px 0 20px var(--shadow-deep);

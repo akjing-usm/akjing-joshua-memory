@@ -15,9 +15,9 @@
 
     <div id="password-gate" style="position:fixed; top:0; left:0; width:100%; height:100%; background: #F6FBFF; z-index:999999; display:flex; flex-direction:column; justify-content:center; align-items:center; transition: 0.5s;">
         <h2 class="handwriting" style="font-size: 32px; color: #2C3E50; margin-bottom: 20px;">一封加密的信件</h2>
-        <input type="password" id="gate-pwd" placeholder="请输入密码" style="padding: 12px; font-size: 18px; text-align: center; border: 2px dashed #8CB9F2; border-radius: 8px; outline: none; margin-bottom: 20px; background: transparent;">
-        <button id="gate-btn" style="padding: 10px 30px; background: #8CB9F2; color: white; border: none; border-radius: 20px; font-size: 18px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">解锁</button>
-        <p id="gate-error" class="handwriting" style="color: #ff4d4f; font-size: 20px; margin-top: 15px; opacity: 0; transition: 0.3s;">密码不对哦，再想想？</p>
+        <input type="password" id="gate-pwd" placeholder="请输入专属密码" style="padding: 10px 20px; font-size: 18px; border: 2px solid #8CB9F2; border-radius: 25px; outline: none; text-align: center; margin-bottom: 20px;">
+        <button id="gate-btn" style="padding: 10px 30px; font-size: 18px; background: #8CB9F2; color: white; border: none; border-radius: 25px; cursor: pointer; transition: 0.3s; font-family: 'Ma Shan Zheng', cursive;">开启回忆</button>
+        <p id="gate-error" class="handwriting" style="color: #FF6B6B; margin-top: 15px; opacity: 0; transition: 0.3s;">密码不对哦，再想想？</p>
     </div>
 
     <button id="musicBtn" class="music-btn" title="播放音乐">🎵</button>
@@ -69,7 +69,6 @@
         <section class="gallery-section" data-theme="morning">
             <div class="scrapbook-wall">
                 <div class="scrapbook-item" data-date="2025.10.02" data-memory="还记得我们相识的那天，那时候的我一个人吃着饭，你和你的朋友们过来拼桌，我们就这样认识了。">
-                    <!-- 🌟 新的高级感呼吸提示 -->
                     <div class="elegant-hint handwriting">✨ 点击照片，翻看背面的故事</div>
                     <div class="photo-placeholder">
                         <img src="images/chapter1/001.jpg" alt="茫茫人海中的相遇">
@@ -109,7 +108,7 @@
                 
                 <div class="scrapbook-item" data-date="2025.10.19" data-type="video" data-memory="还记得当初刚接触C++不久的我们一起做了个‘猜数字’游戏，结果越是测试便发现越多Bug。">
                     <div class="photo-placeholder">
-                        <video loop muted playsinline preload="none">
+                        <video loop muted playsinline preload="metadata">
                             <source src="videos/chapter2/002.mp4" type="video/mp4">
                         </video>
                     </div>
@@ -132,7 +131,7 @@
 
                 <div class="scrapbook-item portrait" data-date="2025.10.18" data-type="video" data-memory="本来想拍照片的，但不小心切到录影模式了，于是随随便便拍了起来。">
                     <div class="photo-placeholder">
-                        <video loop muted playsinline preload="none">
+                        <video loop muted playsinline preload="metadata">
                             <source src="videos/chapter2/003.mp4" type="video/mp4">
                         </video>
                     </div>
@@ -150,7 +149,7 @@
 
                 <div class="scrapbook-item portrait" data-date="2026.01.15" data-type="video" data-memory="手残的我，专心听你弹琴就好。">
                     <div class="photo-placeholder">
-                        <video loop muted playsinline preload="none">
+                        <video loop muted playsinline preload="metadata">
                             <source src="videos/chapter2/005.mp4" type="video/mp4">
                         </video>
                     </div>
@@ -159,7 +158,7 @@
 
                 <div class="scrapbook-item landscape" data-date="2026.01.27" data-type="video" data-memory="那天考试的时候没见到你，整个人有些心绪不宁。从考场出来收到你的消息后，就赶去看你了。看到你的时候，心里说不上来是什么感觉，也不知该说些什么。">
                     <div class="photo-placeholder">
-                        <video loop muted playsinline preload="none">
+                        <video loop muted playsinline preload="metadata">
                             <source src="videos/chapter2/006.mp4" type="video/mp4">
                         </video>
                     </div>
