@@ -344,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     setTimeout(() => {
                         const letterBox = document.querySelector('.phase-3-letter');
                         cinematicScrollTo(letterBox, 3000, -(window.innerHeight * 0.15));
-                    }, 4500);
+                    }, 5500);
                 }
                 
                 // 🌟 Phase 3 & 4

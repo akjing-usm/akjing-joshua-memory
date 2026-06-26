@@ -37,7 +37,10 @@ body {
     color: var(--text-main);
     background-color: var(--bg-morning);
     transition: background-color 2.5s ease-in-out; 
+    
     overflow-x: hidden; 
+    overflow-x: clip; /* 👈 加这一行！这是现代浏览器专用的“绝对裁剪”，任何跑到屏幕外的东西都会被一刀切掉，绝对晃不动了！ */
+    
     width: 100%;
     margin: 0;
     padding: 0;
