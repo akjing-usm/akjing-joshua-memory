@@ -231,12 +231,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 viewerMedia.classList.remove('portrait-film-viewer');
             }
 
-            // 🌟 沉浸模式：放大照片时，把右侧的时光轴隐藏起来，绝不挡视线！
-            document.getElementById('timeline-nav').style.display = 'none';
-            if(document.getElementById('timeline-toggle')) {
-                document.getElementById('timeline-toggle').style.display = 'none';
-            }
-
             viewer.classList.add('active');
             document.body.style.overflow = 'hidden';
         });
@@ -247,14 +241,17 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = 'auto'; 
         document.body.style.overflowX = 'hidden'; 
         
-        // 🌟 退出沉浸模式：关闭照片时，把时光轴召唤回来
-        document.getElementById('timeline-nav').style.display = 'flex';
-        if(document.getElementById('timeline-toggle')) {
-            document.getElementById('timeline-toggle').style.display = 'block';
-        }
-
         const vid = viewerMedia.querySelector('video');
-        if (vid) vid.pause();
+        if (vid) vid.pause(); 
+
+        // 恢复音乐并恢复旋转特效
+        if (wasMusicPlaying) {
+            bgMusic.play().catch(e => console.warn("Audio waiting"));
+            isPlaying = true;
+            musicBtn.textContent = '⏸️'; 
+            musicBtn.classList.add('playing');
+            wasMusicPlaying = false; 
+        }
 
         setTimeout(() => { viewerMedia.innerHTML = ''; }, 500); 
     }
@@ -318,16 +315,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 🌟 Phase 1: 蒙太奇快速闪回
                 if(entry.target.id === 'phase-1' && !entry.target.classList.contains('played')) {
                     entry.target.classList.add('played');
-                    lockManualScroll();
                     
+                    lockManualScroll();
                     const slideshow = entry.target.querySelector('#ending-slideshow');
                     
-                    // 🎥 【终极绝对居中算法】
-                    // 屏幕高度的一半 减去 相框高度的一半。
-                    // 用 getBoundingClientRect 抓取真实高度，彻底无视手机地址栏的干扰！
-                    const rect = slideshow.getBoundingClientRect();
-                    const perfectCenter = -(window.innerHeight / 2) + (rect.height / 2);
-                    cinematicScrollTo(slideshow, 1000, perfectCenter);
+                    // 🎥 【终极防翻车：强行留白居中法】
+                    // 放弃计算高度！直接命令相框距离屏幕顶部预留 15vh (15% 屏幕高度) 的安全距离！
+                    cinematicScrollTo(slideshow, 1000, -(window.innerHeight * 0.15));
                     
                     const slides = slideshow.querySelectorAll('.slide');
                     let current = 0;
@@ -358,13 +352,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     entry.target.classList.add('played');
                     setTimeout(() => {
                         const letterBox = document.querySelector('.phase-3-letter');
-                        
-                        // 🎥 【信封绝对居中】
-                        // 同样使用精确数学公式，保证信件头部绝对不会被屏幕吃掉
-                        const letterRect = letterBox.getBoundingClientRect();
-                        const letterCenter = -(window.innerHeight / 2) + (letterRect.height / 2);
-                        cinematicScrollTo(letterBox, 3000, letterCenter);
-                        
+                        // 🎥 【终极防吃字】：同样命令信纸距离顶部预留 15vh 的空间，绝对不会再被切断！
+                        cinematicScrollTo(letterBox, 3000, -(window.innerHeight * 0.15));
                     }, 4500);
                 }
                 
