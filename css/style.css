@@ -26,13 +26,11 @@ Project : 《拾光》 V6.5 Ultimate Aesthetic Flow
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* 修复双滚动条卡顿与手机溢出 */
-html, body { 
+/* 修复双滚动条卡顿与溢出 */
+html { 
     scroll-behavior: smooth; 
-    overflow-x: hidden !important; /* 👈 核心修复：强制砍掉横向多余的第二条滚动条 */
+    overflow-x: hidden; 
     width: 100%;
-    margin: 0;
-    padding: 0;
 }
 
 /* THEME TRANSITION ENGINE */
@@ -41,13 +39,17 @@ body {
     color: var(--text-main);
     background-color: var(--bg-morning);
     transition: background-color 2.5s ease-in-out; 
+    overflow-x: hidden; 
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 /* 彻底锁死首屏高度 */
 body.scroll-locked { 
     overflow: hidden !important; 
     height: 100vh; 
-    width: 100%; /* 👈 核心修复：把 100vw 改为 100%，防止 Windows 桌面端因为这几个像素被挤出双 bar */
+    width: 100%; /* 👈 核心修复：绝对不能用 100vw，否则在 Windows 上必出双滚动条！ */
 }
 
 body.theme-morning { background-color: var(--bg-morning); }
