@@ -314,7 +314,7 @@ body.theme-night { background-color: var(--bg-night); }
     font-size: 24px; color: var(--text-ink); line-height: 2.2; margin-bottom: 5px;
     white-space: nowrap; overflow: hidden; max-width: 0; 
 }
-.typing-line.type-active { animation: typeReveal 3.0s cubic-bezier(0.4, 0.0, 0.2, 1) forwards; }
+.typing-line.type-active { animation: typeReveal 3.8s cubic-bezier(0.4, 0.0, 0.2, 1) forwards; }
 
 /* Phase 4: Final Text */
 .phase-4-bday { font-size: 36px; color: #FFF; letter-spacing: 4px; text-align: center; }

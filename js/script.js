@@ -319,10 +319,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     lockManualScroll();
                     const slideshow = entry.target.querySelector('#ending-slideshow');
                     
-                    // 🎥 【大道至简：蒙太奇完美居中】
-                    // 直接对齐 Phase-1 容器的最顶部 (offset 0)。
-                    // 因为容器本身刚好填满屏幕并自带居中属性，照片会被死死钉在正中心！
-                    cinematicScrollTo(entry.target, 1000, 0);
+                    // 🎥 【终极防翻车：强行留白居中法】
+                    // 放弃计算高度！直接命令相框距离屏幕顶部预留 15vh (15% 屏幕高度) 的安全距离！
+                    cinematicScrollTo(slideshow, 1000, -(window.innerHeight * 0.15));
                     
                     const slides = slideshow.querySelectorAll('.slide');
                     let current = 0;
@@ -344,7 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     }, 1000); 
                                 }, 1500); 
                             }
-                        }, 500); // 👈 手机防卡顿 500ms
+                        }, 500); 
                     }, 3500); 
                 }
                 
@@ -352,10 +351,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(entry.target.id === 'phase-2' && !entry.target.classList.contains('played')) {
                     entry.target.classList.add('played');
                     setTimeout(() => {
-                        // 🎥 【大道至简：解决信封顶部被切】
-                        // 不再去瞄准信纸了，直接瞄准 Phase-3 整个大容器的顶部！
-                        // 这样信封会自动端端正正地停在屏幕正中央，绝对不会少一块！
-                        cinematicScrollTo(document.getElementById('phase-3'), 3000, 0);
+                        const letterBox = document.querySelector('.phase-3-letter');
+                        // 🎥 【终极防吃字】：同样命令信纸距离顶部预留 15vh 的空间，绝对不会再被切断！
+                        cinematicScrollTo(letterBox, 3000, -(window.innerHeight * 0.15));
                     }, 4500);
                 }
                 
@@ -363,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(entry.target.id === 'phase-3' && !entry.target.classList.contains('typed')) {
                     entry.target.classList.add('typed');
                     const lines = entry.target.querySelectorAll('.typing-line');
-                    const typeSpeed = 3200; // 👈 深情慢速打字
+                    const typeSpeed = 4200; 
                     
                     setTimeout(() => {
                         lines.forEach((line, index) => {
@@ -377,23 +375,30 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         const totalTime = lines.length * typeSpeed;
                         
-                        // 🎥 强制排队触发，防手机乱跳
                         setTimeout(() => {
                             cinematicScrollTo(document.getElementById('phase-4'), 4000, 0);
                             
+                            // 🎥 【调整 1】：缩短“生日快乐”的干等时间（从 4.5 秒缩短为 2.5 秒，看清就黑屏！）
                             setTimeout(() => {
                                 const blackout = document.getElementById('blackout-screen');
                                 blackout.classList.add('active');
                                 
+                                // 🎥 【调整 2】：背景乐像电影彩蛋一样，极其缓慢地淡出（长达 10 秒！）
                                 setTimeout(() => {
                                     let vol = bgMusic.volume;
                                     const fadeAudio = setInterval(() => {
-                                        if (vol > 0.05) { vol -= 0.05; bgMusic.volume = vol; } 
-                                        else { clearInterval(fadeAudio); bgMusic.pause(); }
-                                    }, 250); 
-                                }, 2000); 
+                                        // 每次只减 0.02，每 200ms 降一次，总共需要 10 秒才能彻底没声音
+                                        if (vol > 0.02) { 
+                                            vol -= 0.02; 
+                                            bgMusic.volume = vol; 
+                                        } else { 
+                                            clearInterval(fadeAudio); 
+                                            bgMusic.pause(); 
+                                        }
+                                    }, 200); 
+                                }, 1000); 
                                 
-                            }, 4000 + 4500); 
+                            }, 4000 + 2500); // 👈 这里是调整后的 2500 毫秒
 
                         }, totalTime + 2000); 
 
