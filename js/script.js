@@ -185,9 +185,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const viewerMemory = document.getElementById('viewer-memory');
     
     let wasMusicPlaying = false; 
+    let clearViewerTimeout; // 👈 核心修复1：专门用来防止“点击失效”的定时器拦截员
 
     items.forEach(item => {
         item.addEventListener('click', () => {
+            clearTimeout(clearViewerTimeout); // 👈 核心修复1：一旦点开新照片，立刻拦截之前的清空命令！
+
             const dateStr = item.getAttribute('data-date');
             const type = item.getAttribute('data-type') || 'image';
             const longMemoryStr = item.getAttribute('data-memory'); 
@@ -197,7 +200,6 @@ document.addEventListener('DOMContentLoaded', () => {
             viewerDate.textContent = dateStr;
             viewerCaption.innerHTML = caption;
             
-            // 写入长记忆文字
             if (longMemoryStr) {
                 viewerMemory.innerHTML = longMemoryStr;
                 viewerMemory.style.display = 'block';
@@ -212,7 +214,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     musicBtn.textContent = '🎵'; 
                     musicBtn.classList.remove('playing');
                 }
-
                 const sourceTag = item.querySelector('source');
                 const videoUrl = sourceTag ? sourceTag.getAttribute('src') : '';
                 viewerMedia.innerHTML = `
@@ -224,15 +225,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 viewerMedia.innerHTML = mediaSource;
             }
 
-            // 🌟 如果是竖屏胶卷，给放大框加上专属 class
+            // 竖屏排版通行证
             if (item.classList.contains('portrait-film')) {
                 viewerMedia.classList.add('portrait-film-viewer');
             } else {
                 viewerMedia.classList.remove('portrait-film-viewer');
             }
 
+            // 沉浸模式隐藏时光轴
+            document.getElementById('timeline-nav').style.display = 'none';
+            if(document.getElementById('timeline-toggle')) document.getElementById('timeline-toggle').style.display = 'none';
+
             viewer.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden'; 
         });
     });
 
@@ -241,10 +246,13 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = 'auto'; 
         document.body.style.overflowX = 'hidden'; 
         
+        // 恢复时光轴
+        document.getElementById('timeline-nav').style.display = 'flex';
+        if(document.getElementById('timeline-toggle')) document.getElementById('timeline-toggle').style.display = 'block';
+
         const vid = viewerMedia.querySelector('video');
         if (vid) vid.pause(); 
 
-        // 恢复音乐并恢复旋转特效
         if (wasMusicPlaying) {
             bgMusic.play().catch(e => console.warn("Audio waiting"));
             isPlaying = true;
@@ -253,7 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
             wasMusicPlaying = false; 
         }
 
-        setTimeout(() => { viewerMedia.innerHTML = ''; }, 500); 
+        // 👈 核心修复1：将定时器赋值给变量，以便随时被拦截
+        clearViewerTimeout = setTimeout(() => { viewerMedia.innerHTML = ''; }, 500); 
     }
     
     closeViewerBtn.addEventListener('click', closeViewer);
@@ -273,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // 🎥 终极电影级运镜系统 (完美解决与CSS的拉扯冲突)
+    // 🎥 终极电影级运镜系统 (平滑不卡顿)
     // ==========================================
     let currentScrollAnimation = null; 
     
@@ -304,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentScrollAnimation = requestAnimationFrame(animation);
     }
 
-    // --- 4-PHASE CINEMATIC ENDING ENGINE (微操定制版) ---
+    // --- 4-PHASE CINEMATIC ENDING ENGINE (全恢复版) ---
     const endingPhases = document.querySelectorAll('.ending-phase');
     
     const phaseObserver = new IntersectionObserver((entries) => {
@@ -315,21 +324,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 🌟 Phase 1: 蒙太奇快速闪回
                 if(entry.target.id === 'phase-1' && !entry.target.classList.contains('played')) {
                     entry.target.classList.add('played');
-                    
                     lockManualScroll();
                     const slideshow = entry.target.querySelector('#ending-slideshow');
                     
-                    // 🎥 【智能高度大脑】
+                    // 🎥 【智能高度大脑】判定手机与电脑的完美居中位置
                     const isMobile = window.innerWidth <= 768;
-                    // 手机屏幕又细又长，留出 25% 顶部空白才能视觉居中；电脑依然用 12.5%
                     const topOffset = isMobile ? -(window.innerHeight * 0.25) : -(window.innerHeight * 0.125);
                     cinematicScrollTo(slideshow, 1000, topOffset);
                     
                     const slides = slideshow.querySelectorAll('.slide');
                     let current = 0;
                     
-                    // 🎥 【智能防卡顿大脑】
-                    // 手机显卡弱，延长到 800ms 保证每张图完整加载并显示；电脑依然用干脆的 500ms
+                    // 🎥 【智能防卡顿大脑】手机给 800ms 保证渲染清晰，电脑 500ms
                     const flashSpeed = isMobile ? 800 : 500;
                     
                     setTimeout(() => {
@@ -349,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     }, 1000); 
                                 }, 1500); 
                             }
-                        }, flashSpeed); // 👈 使用自动判定的速度
+                        }, flashSpeed); 
                     }, 3500); 
                 }
                 
@@ -358,7 +364,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     entry.target.classList.add('played');
                     setTimeout(() => {
                         const letterBox = document.querySelector('.phase-3-letter');
-                        // 🎥 【终极防吃字】：同样命令信纸距离顶部预留 15vh 的空间，绝对不会再被切断！
                         cinematicScrollTo(letterBox, 3000, -(window.innerHeight * 0.15));
                     }, 4500);
                 }
@@ -384,27 +389,22 @@ document.addEventListener('DOMContentLoaded', () => {
                         setTimeout(() => {
                             cinematicScrollTo(document.getElementById('phase-4'), 4000, 0);
                             
-                            // 🎥 【调整 1】：缩短“生日快乐”的干等时间（从 4.5 秒缩短为 2.5 秒，看清就黑屏！）
                             setTimeout(() => {
                                 const blackout = document.getElementById('blackout-screen');
                                 blackout.classList.add('active');
                                 
-                                // 🎥 【调整 2】：背景乐像电影彩蛋一样，极其缓慢地淡出（长达 10 秒！）
                                 setTimeout(() => {
                                     let vol = bgMusic.volume;
                                     const fadeAudio = setInterval(() => {
-                                        // 每次只减 0.02，每 200ms 降一次，总共需要 10 秒才能彻底没声音
                                         if (vol > 0.02) { 
-                                            vol -= 0.02; 
-                                            bgMusic.volume = vol; 
+                                            vol -= 0.02; bgMusic.volume = vol; 
                                         } else { 
-                                            clearInterval(fadeAudio); 
-                                            bgMusic.pause(); 
+                                            clearInterval(fadeAudio); bgMusic.pause(); 
                                         }
                                     }, 200); 
                                 }, 1000); 
                                 
-                            }, 4000 + 2500); // 👈 这里是调整后的 2500 毫秒
+                            }, 4000 + 2500); 
 
                         }, totalTime + 2000); 
 
