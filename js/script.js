@@ -335,9 +335,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     const slides = slideshow.querySelectorAll('.slide');
                     let current = 0;
                     
-                    // 🎥 【智能防卡顿大脑】手机给 800ms 保证渲染清晰，电脑 500ms
-                    const flashSpeed = isMobile ? 800 : 500;
+                    // 🎥 【调整1：闪烁速度】废除手机特例，无论手机还是电脑，统一干脆的 500 毫秒！
+                    const flashSpeed = 500;
                     
+                    // 🎥 【调整2：定格时间】减去 0.2 秒（从 3500 改为 3300），刚好留下准备情绪的时间
                     setTimeout(() => {
                         const slideInterval = setInterval(() => {
                             slides.forEach(s => s.classList.remove('active'));
@@ -356,7 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 }, 1500); 
                             }
                         }, flashSpeed); 
-                    }, 3500); 
+                    }, 3300); 
                 }
                 
                 // 🌟 Phase 2: 短句过渡
@@ -387,6 +388,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         const totalTime = lines.length * typeSpeed;
                         
                         setTimeout(() => {
+                            // 🎥 【终极防穿帮】：强行给下方增加 30% 屏幕高度的物理留白！
+                            // 这样信封就会被远远地甩在屏幕上方，绝对不可能再露底！
+                            document.getElementById('phase-4').style.marginTop = '30vh';
                             cinematicScrollTo(document.getElementById('phase-4'), 4000, 0);
                             
                             setTimeout(() => {
