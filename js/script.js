@@ -7,6 +7,15 @@ Project : 《拾光》 V6.5 Cinematic Polish (Pure Native)
 if (history.scrollRestoration) { history.scrollRestoration = 'manual'; }
 window.scrollTo(0, 0);
 
+// 🚀 终极预加载逻辑：直到网页所有资源（图片、音乐、视频）全部下载完毕，才显示按钮
+window.addEventListener('load', () => {
+    const loader = document.getElementById('loader-screen');
+    if (loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => { loader.style.display = 'none'; }, 500);
+    }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
 
     // ==========================================

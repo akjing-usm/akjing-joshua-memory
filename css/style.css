@@ -460,3 +460,12 @@ body.theme-night { background-color: var(--bg-night); }
         opacity: 1 !important; transform: translateX(0); padding-right: 5px;
     }
 }
+
+/* 加载动画 */
+.loader-spinner {
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
