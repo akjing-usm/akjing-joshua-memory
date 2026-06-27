@@ -14,39 +14,25 @@ document.addEventListener('DOMContentLoaded', () => {
     let isPlaying = false;
 
     // ==========================================
-    // 🔒 专属密码锁逻辑 (含终极音乐秒开黑科技)
+    // 🔒 开启礼物逻辑 (通过点击一次性唤醒音乐和视频)
     // ==========================================
     const gate = document.getElementById('password-gate');
-    if (gate) {
-        const gateBtn = document.getElementById('gate-btn');
-        const gatePwd = document.getElementById('gate-pwd');
-        
-        const unlockAction = () => {
-            const pwd = gatePwd.value;
-            if (pwd === "0710") { 
-                gate.style.opacity = '0';
-                setTimeout(() => { gate.style.display = 'none'; }, 500); 
+    const gateBtn = document.getElementById('gate-btn');
+    const bgMusic = document.getElementById('bgMusic'); 
+    let isPlaying = false;
 
-                // 🚀🚀🚀 【终极绝杀：暗度陈仓唤醒法】 🚀🚀🚀
-                // 利用解锁密码的这次点击，骗过浏览器的安全机制！
-                // 偷偷静音播放，强行命令浏览器全速缓冲音乐！
-                if(bgMusic) {
-                    bgMusic.muted = true; // 先静音，别吓到人
-                    bgMusic.play().then(() => {
-                        bgMusic.pause(); // 建立下载通道后，立刻暂停
-                        bgMusic.muted = false; // 恢复音量
-                        bgMusic.currentTime = 0; // 进度归零，等待信封点击
-                    }).catch(e => console.log("等待信封点击唤醒"));
-                }
-                
-            } else {
-                document.getElementById('gate-error').style.opacity = '1'; 
-            }
-        };
+    if (gate && gateBtn) {
+        gateBtn.addEventListener('click', () => {
+            // 1. 强力唤醒音乐 (这是用户点击触发的，浏览器绝不会拦截)
+            bgMusic.play().catch(e => console.warn("Music play error"));
+            isPlaying = true;
+            
+            // 2. 隐藏入口页
+            gate.style.opacity = '0';
+            setTimeout(() => { gate.style.display = 'none'; }, 500);
 
-        gateBtn.addEventListener('click', unlockAction);
-        gatePwd.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') unlockAction();
+            // 3. 顺便处理原有的信封开启逻辑
+            setTimeout(() => { heroSection.classList.add('start-story'); }, 1200);
         });
     }
 
@@ -120,9 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!devMode) {
         envBtn.addEventListener('click', () => {
             envScreen.classList.add('opened');
-            
-            // 🌟 此时点击信封，由于密码阶段已经强行缓冲完毕，音乐 100% 瞬间爆发！
-            if (!isPlaying) toggleMusic();
             
             setTimeout(() => { heroSection.classList.add('start-story'); }, 1200);
 
