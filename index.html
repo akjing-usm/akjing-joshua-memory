@@ -11,7 +11,7 @@
     
     <link rel="stylesheet" href="css/style.css">
 
-    <link rel="preload" href="music/bgm.mp3" as="audio">
+    <link rel="preload" href="music/bgm.mp3" as="audio" fetchpriority="high">
 </head>
 <body class="theme-morning scroll-locked">
 
@@ -23,7 +23,7 @@
     </div>
 
     <button id="musicBtn" class="music-btn" title="播放音乐">🎵</button>
-    <audio id="bgMusic" loop preload="auto">
+    <audio id="bgMusic" loop preload="auto" fetchpriority="high">
         <source src="music/bgm.mp3" type="audio/mpeg">
     </audio>
 
@@ -57,7 +57,7 @@
         </div>
     </section>
 
-    <div id="scrapbook" class="scrapbook-container">
+    <div id="scrapbook" class="scrapbook-container" style="display: none;">
  
         <section id="chapter-1" class="chapter-cover" data-theme="morning">
             <div class="chapter-title-wrapper paper-texture">

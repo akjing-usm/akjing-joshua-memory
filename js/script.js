@@ -124,6 +124,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 heroSection.style.display = 'none'; 
                 document.body.classList.remove('scroll-locked');
                 window.scrollTo(0, 0); 
+                
+                // 🚀 核心拦截解除：直到你点击“翻开书本”，才允许浏览器看到照片并开始下载！
+                scrapbook.style.display = 'block'; 
+                
                 setTimeout(() => { scrapbook.classList.add('show'); }, 100);
             }, 2500); 
         });
