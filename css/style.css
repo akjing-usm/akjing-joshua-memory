@@ -26,22 +26,25 @@ Project : 《拾光》 V6.5 Ultimate Aesthetic Flow (Final)
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* 彻底修复 Windows 电脑端双滚动条 (双bar) */
+/* 彻底修复 Windows 电脑端双滚动条 & 手机端顽固横向摇晃 */
 html { 
     scroll-behavior: smooth; 
+    overflow-x: hidden !important; 
+    max-width: 100%;
+    overscroll-behavior-x: none; /* 👈 核心1：彻底禁止手机端横向的滑动惯性和回弹效果 */
 }
 
-/* THEME TRANSITION ENGINE & 彻底锁死手机左右晃动 */
+/* THEME TRANSITION ENGINE & 彻底锁死边界 */
 body {
     font-family: var(--font-std);
     color: var(--text-main);
     background-color: var(--bg-morning);
     transition: background-color 2.5s ease-in-out; 
     
-    overflow-x: hidden; 
-    overflow-x: clip; /* 👈 加这一行！这是现代浏览器专用的“绝对裁剪”，任何跑到屏幕外的东西都会被一刀切掉，绝对晃不动了！ */
-    
+    overflow-x: hidden !important; 
     width: 100%;
+    max-width: 100%; /* 👈 核心2：强行规定最大宽度绝不能超过屏幕 */
+    position: relative; /* 👈 核心3：把所有藏在屏幕外的东西死死关在 body 内部 */
     margin: 0;
     padding: 0;
 }
