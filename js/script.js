@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const devMode = false; 
 
     // ==========================================
-    // 🚀 终极性能优化：图片与视频防卡顿管家
+    // 🚀 终极性能优化：错峰启动管家
     // ==========================================
     document.querySelectorAll('img:not(.slide)').forEach(img => {
         img.setAttribute('loading', 'lazy');
@@ -44,23 +44,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const isMobile = window.innerWidth <= 768;
 
-    if (isMobile) {
-        // 📱 手机端：依然需要严格控制，滑出屏幕立刻暂停，省电防发热
-        const lazyVideoObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.play().catch(() => {});
-                } else {
-                    entry.target.pause();
-                }
+    // 封装视频启动逻辑，等音乐响了再执行，绝不抢占 CPU
+    function initSmartVideos() {
+        if (isMobile) {
+            const lazyVideoObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.play().catch(() => {});
+                    } else {
+                        entry.target.pause();
+                    }
+                });
+            }, { threshold: 0.1 }); 
+            document.querySelectorAll('.photo-placeholder video').forEach(video => {
+                lazyVideoObserver.observe(video);
             });
-        }, { threshold: 0.1 }); 
-
-        document.querySelectorAll('.photo-placeholder video').forEach(video => {
-            lazyVideoObserver.observe(video);
-        });
+        } else {
+            // 💻 电脑端：错峰启动！每隔 300 毫秒启动一个视频，彻底避免 CPU 瞬间堵死！
+            const videos = document.querySelectorAll('.photo-placeholder video');
+            videos.forEach((video, index) => {
+                setTimeout(() => {
+                    video.play().catch(() => {});
+                }, index * 300); // 0ms, 300ms, 600ms 阶梯式启动
+            });
+        }
     }
-    // 💻 电脑端：什么都不用写！彻底解开封印，交给强大的浏览器原生 autoplay 引擎，恢复最原始的极致丝滑！
 
     if (devMode) {
         document.getElementById('envelope-screen').style.display = 'none';
@@ -96,15 +104,17 @@ document.addEventListener('DOMContentLoaded', () => {
     musicBtn.addEventListener('click', toggleMusic);
 
     if (!devMode) {
-        // ❌ 请把这三行彻彻底底地删掉！！！就是它导致了音乐重新缓冲和延迟！
-        envBtn.addEventListener('mouseenter', () => {
-            bgMusic.load(); 
-        });
-
-        // 下面正常的点击事件保留不动 👇
         envBtn.addEventListener('click', () => {
             envScreen.classList.add('opened');
+            
+            // 1. 最高优先级：点击信封的瞬间，立刻启动音乐！
             if (!isPlaying) toggleMusic();
+            
+            // 2. 延迟 800ms：等音乐安全响起后，再让视频一个接一个地错峰启动
+            setTimeout(() => {
+                initSmartVideos();
+            }, 800);
+
             setTimeout(() => { heroSection.classList.add('start-story'); }, 1200);
         });
 
