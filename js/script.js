@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     musicBtn.classList.remove('playing');
                 }
                 const sourceTag = item.querySelector('source');
-                const videoUrl = sourceTag ? sourceTag.getAttribute('src') : '';
+                const videoUrl = sourceTag ? (sourceTag.getAttribute('src') || sourceTag.getAttribute('data-src')) : '';
                 viewerMedia.innerHTML = `
                     <video controls autoplay loop playsinline style="max-width: 100%; max-height: 65vh; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                         <source src="${videoUrl}" type="video/mp4">
