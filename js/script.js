@@ -1,6 +1,6 @@
 /*
 ==================================================
-Project : 《拾光》 V6.5 Cinematic Polish (Ultimate)
+Project : 《拾光》 V6.5 Cinematic Polish (Pure Native)
 ==================================================
 */
 
@@ -9,68 +9,14 @@ window.scrollTo(0, 0);
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // 🚀 提前拿到音乐的控制权
-    const bgMusic = document.getElementById('bgMusic'); 
-    let isPlaying = false;
+    const devMode = false; 
 
     // ==========================================
-    // 🔒 开启礼物逻辑 (通过点击一次性唤醒音乐和视频)
-    // ==========================================
-    const gate = document.getElementById('password-gate');
-    const gateBtn = document.getElementById('gate-btn');
-    const bgMusic = document.getElementById('bgMusic'); 
-    let isPlaying = false;
-
-    if (gate && gateBtn) {
-        gateBtn.addEventListener('click', () => {
-            // 1. 强力唤醒音乐 (这是用户点击触发的，浏览器绝不会拦截)
-            bgMusic.play().catch(e => console.warn("Music play error"));
-            isPlaying = true;
-            
-            // 2. 隐藏入口页
-            gate.style.opacity = '0';
-            setTimeout(() => { gate.style.display = 'none'; }, 500);
-
-            // 3. 顺便处理原有的信封开启逻辑
-            setTimeout(() => { heroSection.classList.add('start-story'); }, 1200);
-        });
-    }
-
-    const devMode = false; // ⚠️ 注意：测试时请务必保持 false，一定要经过密码解锁那一步！
-
-    // ==========================================
-    // 🚀 终极性能优化：错峰启动管家
+    // 🚀 性能优化：仅保留图片的懒加载，彻底废除视频的代码干预！
     // ==========================================
     document.querySelectorAll('img:not(.slide)').forEach(img => {
         img.setAttribute('loading', 'lazy');
     });
-
-    const isMobile = window.innerWidth <= 768;
-
-    function initSmartVideos() {
-        if (isMobile) {
-            const lazyVideoObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.play().catch(() => {});
-                    } else {
-                        entry.target.pause();
-                    }
-                });
-            }, { threshold: 0.1 }); 
-            document.querySelectorAll('.photo-placeholder video').forEach(video => {
-                lazyVideoObserver.observe(video);
-            });
-        } else {
-            // 电脑端视频错峰启动，防止卡顿
-            const videos = document.querySelectorAll('.photo-placeholder video');
-            videos.forEach((video, index) => {
-                setTimeout(() => {
-                    video.play().catch(() => {});
-                }, index * 300); 
-            });
-        }
-    }
 
     if (devMode) {
         document.getElementById('envelope-screen').style.display = 'none';
@@ -88,6 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // --- Audio Engine ---
     const musicBtn = document.getElementById('musicBtn');
+    const bgMusic = document.getElementById('bgMusic');
+    let isPlaying = false;
 
     function toggleMusic() {
         if (isPlaying) {
@@ -107,18 +55,21 @@ document.addEventListener('DOMContentLoaded', () => {
         envBtn.addEventListener('click', () => {
             envScreen.classList.add('opened');
             
+            // 1. 音乐绝对秒开（因为此时没有任何视频跟它抢网速！）
+            if (!isPlaying) toggleMusic();
+            
             setTimeout(() => { heroSection.classList.add('start-story'); }, 1200);
 
-            // 延迟唤醒视频，绝不和音乐抢网速
+            // 2. 终极障眼法：延迟 1.5 秒（等信封消失、音乐稳稳响起后）
+            // 再悄悄把链接还给视频，让它们在后台用原生引擎静默缓冲，滑到时绝对丝滑！
             setTimeout(() => {
                 document.querySelectorAll('video').forEach(video => {
                     const source = video.querySelector('source');
                     if (source && source.hasAttribute('data-src')) {
                         source.setAttribute('src', source.getAttribute('data-src'));
-                        video.load(); 
+                        video.load(); // 唤醒视频
                     }
                 });
-                initSmartVideos();
             }, 1500);
         });
 
@@ -227,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     musicBtn.classList.remove('playing');
                 }
                 const sourceTag = item.querySelector('source');
-                const videoUrl = sourceTag ? (sourceTag.getAttribute('src') || sourceTag.getAttribute('data-src')) : '';
+                const videoUrl = sourceTag ? sourceTag.getAttribute('src') : '';
                 viewerMedia.innerHTML = `
                     <video controls autoplay loop playsinline style="max-width: 100%; max-height: 65vh; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                         <source src="${videoUrl}" type="video/mp4">
