@@ -78,8 +78,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!devMode) {
         envBtn.addEventListener('click', () => {
             envScreen.classList.add('opened');
+            
+            // 1. 音乐绝对秒开（因为此时没有任何视频跟它抢网速！）
             if (!isPlaying) toggleMusic();
+            
             setTimeout(() => { heroSection.classList.add('start-story'); }, 1200);
+
+            // 2. 终极障眼法：延迟 1.5 秒（等信封消失、音乐稳稳响起后）
+            // 再悄悄把链接还给视频，让它们在后台用原生引擎静默缓冲，滑到时绝对丝滑！
+            setTimeout(() => {
+                document.querySelectorAll('video').forEach(video => {
+                    const source = video.querySelector('source');
+                    if (source && source.hasAttribute('data-src')) {
+                        source.setAttribute('src', source.getAttribute('data-src'));
+                        video.load(); // 唤醒视频
+                    }
+                });
+            }, 1500);
         });
 
         openBookBtn.addEventListener('click', () => {
