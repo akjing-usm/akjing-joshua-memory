@@ -9,6 +9,30 @@ window.scrollTo(0, 0);
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    // ==========================================
+    // 🔒 专属密码锁逻辑
+    // ==========================================
+    const gate = document.getElementById('password-gate');
+    if (gate) {
+        const gateBtn = document.getElementById('gate-btn');
+        const gatePwd = document.getElementById('gate-pwd');
+        
+        const unlockAction = () => {
+            const pwd = gatePwd.value;
+            if (pwd === "0710") { 
+                gate.style.opacity = '0';
+                setTimeout(() => { gate.style.display = 'none'; }, 500); 
+            } else {
+                document.getElementById('gate-error').style.opacity = '1'; 
+            }
+        };
+
+        gateBtn.addEventListener('click', unlockAction);
+        gatePwd.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') unlockAction();
+        });
+    }
+
     const devMode = false; 
 
     // ==========================================
