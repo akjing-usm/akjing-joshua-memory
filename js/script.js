@@ -90,6 +90,11 @@ document.addEventListener('DOMContentLoaded', () => {
     musicBtn.addEventListener('click', toggleMusic);
 
     if (!devMode) {
+        // 🚀 音乐秒开黑科技：当电脑鼠标悬停在信封上时，提前强制浏览器解冻音频！
+        envBtn.addEventListener('mouseenter', () => {
+            bgMusic.load(); 
+        });
+
         envBtn.addEventListener('click', () => {
             envScreen.classList.add('opened');
             if (!isPlaying) toggleMusic();

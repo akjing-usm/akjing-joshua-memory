@@ -29,9 +29,8 @@ Project : 《拾光》 V6.5 Ultimate Aesthetic Flow (Final)
 /* 彻底修复 Windows 电脑端双滚动条 & 手机端顽固横向摇晃 */
 html { 
     scroll-behavior: smooth; 
-    overflow-x: hidden !important; 
-    max-width: 100%;
-    overscroll-behavior-x: none; /* 👈 核心1：彻底禁止手机端横向的滑动惯性和回弹效果 */
+    overscroll-behavior-x: none; /* 👈 保留这个：专门对付手机端的弹性回弹 */
+    /* ❌ 绝对不要在这里写 overflow-x: hidden，否则电脑必出双bar！ */
 }
 
 /* THEME TRANSITION ENGINE & 彻底锁死边界 */
@@ -41,10 +40,10 @@ body {
     background-color: var(--bg-morning);
     transition: background-color 2.5s ease-in-out; 
     
-    overflow-x: hidden !important; 
+    overflow-x: hidden; /* ✅ 防晃动裁剪只写在 body 里，保证只有一条滚动条 */
     width: 100%;
-    max-width: 100%; /* 👈 核心2：强行规定最大宽度绝不能超过屏幕 */
-    position: relative; /* 👈 核心3：把所有藏在屏幕外的东西死死关在 body 内部 */
+    max-width: 100%; 
+    position: relative; 
     margin: 0;
     padding: 0;
 }
