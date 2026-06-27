@@ -1,6 +1,6 @@
 /*
 ==================================================
-Project : 《拾光》 V6.5 Cinematic Polish (Pure Native)
+Project : 《拾光》 V6.5 Cinematic Polish (Ultimate)
 ==================================================
 */
 
@@ -9,8 +9,12 @@ window.scrollTo(0, 0);
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    // 🚀 提前拿到音乐的控制权
+    const bgMusic = document.getElementById('bgMusic'); 
+    let isPlaying = false;
+
     // ==========================================
-    // 🔒 专属密码锁逻辑
+    // 🔒 专属密码锁逻辑 (含终极音乐秒开黑科技)
     // ==========================================
     const gate = document.getElementById('password-gate');
     if (gate) {
@@ -22,6 +26,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (pwd === "0710") { 
                 gate.style.opacity = '0';
                 setTimeout(() => { gate.style.display = 'none'; }, 500); 
+
+                // 🚀🚀🚀 【终极绝杀：暗度陈仓唤醒法】 🚀🚀🚀
+                // 利用解锁密码的这次点击，骗过浏览器的安全机制！
+                // 偷偷静音播放，强行命令浏览器全速缓冲音乐！
+                if(bgMusic) {
+                    bgMusic.muted = true; // 先静音，别吓到人
+                    bgMusic.play().then(() => {
+                        bgMusic.pause(); // 建立下载通道后，立刻暂停
+                        bgMusic.muted = false; // 恢复音量
+                        bgMusic.currentTime = 0; // 进度归零，等待信封点击
+                    }).catch(e => console.log("等待信封点击唤醒"));
+                }
+                
             } else {
                 document.getElementById('gate-error').style.opacity = '1'; 
             }
@@ -33,14 +50,41 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const devMode = false; 
+    const devMode = false; // ⚠️ 注意：测试时请务必保持 false，一定要经过密码解锁那一步！
 
     // ==========================================
-    // 🚀 性能优化：仅保留图片的懒加载，彻底废除视频的代码干预！
+    // 🚀 终极性能优化：错峰启动管家
     // ==========================================
     document.querySelectorAll('img:not(.slide)').forEach(img => {
         img.setAttribute('loading', 'lazy');
     });
+
+    const isMobile = window.innerWidth <= 768;
+
+    function initSmartVideos() {
+        if (isMobile) {
+            const lazyVideoObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.play().catch(() => {});
+                    } else {
+                        entry.target.pause();
+                    }
+                });
+            }, { threshold: 0.1 }); 
+            document.querySelectorAll('.photo-placeholder video').forEach(video => {
+                lazyVideoObserver.observe(video);
+            });
+        } else {
+            // 电脑端视频错峰启动，防止卡顿
+            const videos = document.querySelectorAll('.photo-placeholder video');
+            videos.forEach((video, index) => {
+                setTimeout(() => {
+                    video.play().catch(() => {});
+                }, index * 300); 
+            });
+        }
+    }
 
     if (devMode) {
         document.getElementById('envelope-screen').style.display = 'none';
@@ -58,8 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // --- Audio Engine ---
     const musicBtn = document.getElementById('musicBtn');
-    const bgMusic = document.getElementById('bgMusic');
-    let isPlaying = false;
 
     function toggleMusic() {
         if (isPlaying) {
@@ -79,21 +121,21 @@ document.addEventListener('DOMContentLoaded', () => {
         envBtn.addEventListener('click', () => {
             envScreen.classList.add('opened');
             
-            // 1. 音乐绝对秒开（因为此时没有任何视频跟它抢网速！）
+            // 🌟 此时点击信封，由于密码阶段已经强行缓冲完毕，音乐 100% 瞬间爆发！
             if (!isPlaying) toggleMusic();
             
             setTimeout(() => { heroSection.classList.add('start-story'); }, 1200);
 
-            // 2. 终极障眼法：延迟 1.5 秒（等信封消失、音乐稳稳响起后）
-            // 再悄悄把链接还给视频，让它们在后台用原生引擎静默缓冲，滑到时绝对丝滑！
+            // 延迟唤醒视频，绝不和音乐抢网速
             setTimeout(() => {
                 document.querySelectorAll('video').forEach(video => {
                     const source = video.querySelector('source');
                     if (source && source.hasAttribute('data-src')) {
                         source.setAttribute('src', source.getAttribute('data-src'));
-                        video.load(); // 唤醒视频
+                        video.load(); 
                     }
                 });
+                initSmartVideos();
             }, 1500);
         });
 
@@ -202,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     musicBtn.classList.remove('playing');
                 }
                 const sourceTag = item.querySelector('source');
-                const videoUrl = sourceTag ? sourceTag.getAttribute('src') : '';
+                const videoUrl = sourceTag ? (sourceTag.getAttribute('src') || sourceTag.getAttribute('data-src')) : '';
                 viewerMedia.innerHTML = `
                     <video controls autoplay loop playsinline style="max-width: 100%; max-height: 65vh; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                         <source src="${videoUrl}" type="video/mp4">
