@@ -36,10 +36,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const devMode = false; 
 
     // ==========================================
-    // 🚀 性能优化：仅保留图片的懒加载，彻底废除视频的代码干预！
+    // 🚀 性能优化：图片全部懒加载 + 视频按需播放（电脑/手机都适用）
     // ==========================================
-    document.querySelectorAll('img:not(.slide)').forEach(img => {
+    document.querySelectorAll('img').forEach(img => {
         img.setAttribute('loading', 'lazy');
+    });
+
+    const lazyVideoObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.play().catch(() => {});
+            } else {
+                entry.target.pause();
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.photo-placeholder video').forEach(video => {
+        lazyVideoObserver.observe(video);
     });
 
     if (devMode) {
