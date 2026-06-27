@@ -36,25 +36,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const devMode = false; 
 
     // ==========================================
-    // 🚀 终极性能优化：图片与视频防卡顿管家
+    // 🚀 终极性能优化：图片与视频防卡顿管家 (双端智能版)
     // ==========================================
     document.querySelectorAll('img:not(.slide)').forEach(img => {
         img.setAttribute('loading', 'lazy');
     });
 
-    const lazyVideoObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.play().catch(() => {});
-            } else {
-                entry.target.pause();
-            }
-        });
-    }, { threshold: 0.1 }); 
+    const isMobile = window.innerWidth <= 768;
 
-    document.querySelectorAll('.photo-placeholder video').forEach(video => {
-        lazyVideoObserver.observe(video);
-    });
+    if (isMobile) {
+        // 📱 手机端：性能较弱，保留严格的“视线内播放，滑走立刻暂停”
+        const lazyVideoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.play().catch(() => {});
+                } else {
+                    entry.target.pause();
+                }
+            });
+        }, { threshold: 0.1 }); 
+
+        document.querySelectorAll('.photo-placeholder video').forEach(video => {
+            lazyVideoObserver.observe(video);
+        });
+    } else {
+        // 💻 电脑端：性能强劲，恢复早期的“后台全局静默播放”！
+        // 并且故意延迟 1.5 秒启动视频，确保背景音乐拥有 100% 的首发网速和内存！
+        document.querySelectorAll('.photo-placeholder video').forEach(video => {
+            setTimeout(() => {
+                video.play().catch(() => {});
+            }, 1500);
+        });
+    }
 
     if (devMode) {
         document.getElementById('envelope-screen').style.display = 'none';
