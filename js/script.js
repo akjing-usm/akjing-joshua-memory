@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const devMode = false; 
 
     // ==========================================
-    // 🚀 终极性能优化：图片与视频防卡顿管家 (双端智能版)
+    // 🚀 终极性能优化：图片与视频防卡顿管家
     // ==========================================
     document.querySelectorAll('img:not(.slide)').forEach(img => {
         img.setAttribute('loading', 'lazy');
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const isMobile = window.innerWidth <= 768;
 
     if (isMobile) {
-        // 📱 手机端：性能较弱，保留严格的“视线内播放，滑走立刻暂停”
+        // 📱 手机端：依然需要严格控制，滑出屏幕立刻暂停，省电防发热
         const lazyVideoObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -59,15 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.photo-placeholder video').forEach(video => {
             lazyVideoObserver.observe(video);
         });
-    } else {
-        // 💻 电脑端：性能强劲，恢复早期的“后台全局静默播放”！
-        // 并且故意延迟 1.5 秒启动视频，确保背景音乐拥有 100% 的首发网速和内存！
-        document.querySelectorAll('.photo-placeholder video').forEach(video => {
-            setTimeout(() => {
-                video.play().catch(() => {});
-            }, 1500);
-        });
     }
+    // 💻 电脑端：什么都不用写！彻底解开封印，交给强大的浏览器原生 autoplay 引擎，恢复最原始的极致丝滑！
 
     if (devMode) {
         document.getElementById('envelope-screen').style.display = 'none';
