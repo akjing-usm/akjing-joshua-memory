@@ -62,32 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     // 💻 电脑端：什么都不用写！彻底解开封印，交给强大的浏览器原生 autoplay 引擎，恢复最原始的极致丝滑！
 
-    // 强制顺序启动：先保证音乐，再启动视频
-    const startMedia = () => {
-        // 1. 强制先唤醒音乐
-        bgMusic.play().catch(e => console.log("Music awaiting interaction"));
-        isPlaying = true;
-        musicBtn.textContent = '⏸️';
-        musicBtn.classList.add('playing');
-
-        // 2. 延迟 800ms，避开音乐启动的 CPU 峰值，再让所有视频开始播放
-        setTimeout(() => {
-            document.querySelectorAll('video').forEach(v => v.play().catch(() => {}));
-        }, 800);
-    };
-
-    // 在点击“开启回忆”的时候触发
-    openBookBtn.addEventListener('click', () => {
-        heroSection.classList.add('fade-out');
-        startMedia(); // 这里强制调用
-        setTimeout(() => {
-            heroSection.style.display = 'none'; 
-            document.body.classList.remove('scroll-locked');
-            window.scrollTo(0, 0); 
-            setTimeout(() => { scrapbook.classList.add('show'); }, 100);
-        }, 2500); 
-    });
-    
     if (devMode) {
         document.getElementById('envelope-screen').style.display = 'none';
         document.getElementById('hero').style.display = 'none';
