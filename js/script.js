@@ -90,11 +90,12 @@ document.addEventListener('DOMContentLoaded', () => {
     musicBtn.addEventListener('click', toggleMusic);
 
     if (!devMode) {
-        // 🚀 音乐秒开黑科技：当电脑鼠标悬停在信封上时，提前强制浏览器解冻音频！
+        // ❌ 请把这三行彻彻底底地删掉！！！就是它导致了音乐重新缓冲和延迟！
         envBtn.addEventListener('mouseenter', () => {
             bgMusic.load(); 
         });
 
+        // 下面正常的点击事件保留不动 👇
         envBtn.addEventListener('click', () => {
             envScreen.classList.add('opened');
             if (!isPlaying) toggleMusic();

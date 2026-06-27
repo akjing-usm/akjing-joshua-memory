@@ -26,11 +26,10 @@ Project : 《拾光》 V6.5 Ultimate Aesthetic Flow (Final)
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* 彻底修复 Windows 电脑端双滚动条 & 手机端顽固横向摇晃 */
+/* 彻底修复 Windows 双滚动条 & 手机端顽固横向摇晃 */
 html { 
     scroll-behavior: smooth; 
-    overscroll-behavior-x: none; /* 👈 保留这个：专门对付手机端的弹性回弹 */
-    /* ❌ 绝对不要在这里写 overflow-x: hidden，否则电脑必出双bar！ */
+    overflow-x: clip; /* 👈 核心：使用 clip（裁剪）而不是 hidden。它比 hidden 更霸道，且绝不触发电脑双bar！ */
 }
 
 /* THEME TRANSITION ENGINE & 彻底锁死边界 */
@@ -40,10 +39,8 @@ body {
     background-color: var(--bg-morning);
     transition: background-color 2.5s ease-in-out; 
     
-    overflow-x: hidden; /* ✅ 防晃动裁剪只写在 body 里，保证只有一条滚动条 */
+    overflow-x: clip; /* 👈 同样使用 clip，把跑到屏幕外的东西一刀切断 */
     width: 100%;
-    max-width: 100%; 
-    position: relative; 
     margin: 0;
     padding: 0;
 }
@@ -52,7 +49,7 @@ body {
 body.scroll-locked { 
     overflow: hidden !important; 
     height: 100vh; 
-    width: 100%;
+    width: 100%; /* 绝不能用 100vw */
 }
 
 body.theme-morning { background-color: var(--bg-morning); }
@@ -84,7 +81,7 @@ body.theme-night { background-color: var(--bg-night); }
 
 /* --- 0. ENVELOPE SCENE --- */
 .envelope-screen {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
     background-color: var(--bg-morning); display: flex; justify-content: center; align-items: center;
     z-index: 9999; transition: opacity 1.5s ease, visibility 1.5s;
 }
@@ -227,14 +224,14 @@ body.theme-night { background-color: var(--bg-night); }
 
 /* --- MEMORY VIEWER (Lightbox) --- */
 .memory-viewer {
-    position: fixed; top: 0; left: 0; width: 100vw; 
+    position: fixed; top: 0; left: 0; width: 100%; 
     height: 100vh; height: 100dvh; /* 适配 Safari 底部导航栏 */
     display: flex; justify-content: center; align-items: center;
     z-index: 10000; opacity: 0; pointer-events: none; transition: 0.5s ease;
 }
 .memory-viewer.active { opacity: 1; pointer-events: auto; }
 .viewer-overlay { 
-    position: fixed; top: 0; left: 0; width: 100vw; 
+    position: fixed; top: 0; left: 0; width: 100%; 
     height: 100vh; height: 100dvh; 
     background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); 
 }
@@ -313,7 +310,7 @@ body.theme-night { background-color: var(--bg-night); }
 
 /* PHASE 4 BLACKOUT SEQUENCE */
 .screen-blackout { 
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh; 
     background: #000; z-index: 99999; opacity: 0; pointer-events: none; 
     transition: opacity 2.5s ease; display: flex; justify-content: center; align-items: center; 
 }
