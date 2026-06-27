@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // 🚀 终极性能优化：图片与视频防卡顿管家
     // ==========================================
-    document.querySelectorAll('img:not(.slide)').forEach(img => {
+    document.querySelectorAll('img').forEach(img => {
         img.setAttribute('loading', 'lazy');
     });
 
