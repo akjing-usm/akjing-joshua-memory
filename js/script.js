@@ -38,24 +38,29 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // 🚀 终极性能优化：图片与视频防卡顿管家
     // ==========================================
-    document.querySelectorAll('img').forEach(img => {
+    document.querySelectorAll('img:not(.slide)').forEach(img => {
         img.setAttribute('loading', 'lazy');
     });
 
-    // 🚀 视频懒加载：电脑和手机都需要，滑出屏幕暂停，避免一开始所有视频一起抢带宽造成卡顿
-    const lazyVideoObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.play().catch(() => {});
-            } else {
-                entry.target.pause();
-            }
-        });
-    }, { threshold: 0.1 });
+    const isMobile = window.innerWidth <= 768;
 
-    document.querySelectorAll('.photo-placeholder video').forEach(video => {
-        lazyVideoObserver.observe(video);
-    });
+    if (isMobile) {
+        // 📱 手机端：依然需要严格控制，滑出屏幕立刻暂停，省电防发热
+        const lazyVideoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.play().catch(() => {});
+                } else {
+                    entry.target.pause();
+                }
+            });
+        }, { threshold: 0.1 }); 
+
+        document.querySelectorAll('.photo-placeholder video').forEach(video => {
+            lazyVideoObserver.observe(video);
+        });
+    }
+    // 💻 电脑端：什么都不用写！彻底解开封印，交给强大的浏览器原生 autoplay 引擎，恢复最原始的极致丝滑！
 
     if (devMode) {
         document.getElementById('envelope-screen').style.display = 'none';
@@ -91,6 +96,12 @@ document.addEventListener('DOMContentLoaded', () => {
     musicBtn.addEventListener('click', toggleMusic);
 
     if (!devMode) {
+        // ❌ 请把这三行彻彻底底地删掉！！！就是它导致了音乐重新缓冲和延迟！
+        envBtn.addEventListener('mouseenter', () => {
+            bgMusic.load(); 
+        });
+
+        // 下面正常的点击事件保留不动 👇
         envBtn.addEventListener('click', () => {
             envScreen.classList.add('opened');
             if (!isPlaying) toggleMusic();
