@@ -42,25 +42,20 @@ document.addEventListener('DOMContentLoaded', () => {
         img.setAttribute('loading', 'lazy');
     });
 
-    const isMobile = window.innerWidth <= 768;
-
-    if (isMobile) {
-        // 📱 手机端：依然需要严格控制，滑出屏幕立刻暂停，省电防发热
-        const lazyVideoObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.play().catch(() => {});
-                } else {
-                    entry.target.pause();
-                }
-            });
-        }, { threshold: 0.1 }); 
-
-        document.querySelectorAll('.photo-placeholder video').forEach(video => {
-            lazyVideoObserver.observe(video);
+    // 🚀 视频懒加载：电脑和手机都需要，滑出屏幕暂停，避免一开始所有视频一起抢带宽造成卡顿
+    const lazyVideoObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.play().catch(() => {});
+            } else {
+                entry.target.pause();
+            }
         });
-    }
-    // 💻 电脑端：什么都不用写！彻底解开封印，交给强大的浏览器原生 autoplay 引擎，恢复最原始的极致丝滑！
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.photo-placeholder video').forEach(video => {
+        lazyVideoObserver.observe(video);
+    });
 
     if (devMode) {
         document.getElementById('envelope-screen').style.display = 'none';
@@ -96,12 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
     musicBtn.addEventListener('click', toggleMusic);
 
     if (!devMode) {
-        // ❌ 请把这三行彻彻底底地删掉！！！就是它导致了音乐重新缓冲和延迟！
-        envBtn.addEventListener('mouseenter', () => {
-            bgMusic.load(); 
-        });
-
-        // 下面正常的点击事件保留不动 👇
         envBtn.addEventListener('click', () => {
             envScreen.classList.add('opened');
             if (!isPlaying) toggleMusic();
